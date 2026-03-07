@@ -8,8 +8,8 @@ import {
   CardTitle,
 } from "@/src/components/ui/card";
 import { Sparkles, FileText, Copy, Check } from "lucide-react";
-import { GoogleGenAI } from "@google/genai";
 import { motion } from "motion/react";
+import { getGeminiClient } from "@/src/lib/gemini";
 
 export default function ScriptGenerator() {
   const [niche, setNiche] = useState("");
@@ -24,7 +24,7 @@ export default function ScriptGenerator() {
     setLoading(true);
 
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+      const ai = getGeminiClient();
       const prompt = `Gere 3 roteiros virais para TikTok "dark" (sem aparecer).
       Nicho: ${niche}
       Tema: ${theme}
@@ -45,7 +45,7 @@ export default function ScriptGenerator() {
       ]`;
 
       const response = await ai.models.generateContent({
-        model: "gemini-3-flash-preview",
+        model: "gemini-3.1-flash-lite-preview",
         contents: prompt,
         config: {
           responseMimeType: "application/json",
@@ -118,7 +118,7 @@ export default function ScriptGenerator() {
             disabled={loading}
           >
             <Sparkles className="w-4 h-4" />
-            {loading ? "ESCREVENDO ROTEIROS..." : "GERAR 10 ROTEIROS VIRAIS"}
+            {loading ? "ESCREVENDO ROTEIROS..." : "GERAR 3 ROTEIROS VIRAIS"}
           </Button>
         </CardContent>
       </Card>

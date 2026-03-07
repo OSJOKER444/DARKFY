@@ -9,7 +9,6 @@ import {
   Calendar,
   DollarSign,
   Settings,
-  Image as ImageIcon,
   LogOut,
 } from "lucide-react";
 import { cn } from "@/src/lib/utils";
@@ -21,7 +20,6 @@ const menuItems = [
   { icon: UserCircle, label: "Criador de Perfil Dark", path: "/profile" },
   { icon: Video, label: "Máquina de Conteúdo", path: "/content" },
   { icon: FileText, label: "Gerador de Roteiros", path: "/scripts" },
-  { icon: ImageIcon, label: "Gerador de Imagens", path: "/images" },
   { icon: Calendar, label: "Calendário de Conteúdo", path: "/calendar" },
   { icon: DollarSign, label: "Simulador de Monetização", path: "/simulator" },
   { icon: Settings, label: "Configurações", path: "/settings" },

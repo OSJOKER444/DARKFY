@@ -40,7 +40,7 @@ export default function ContentMachine() {
       ]`;
 
       const response = await ai.models.generateContent({
-        model: "gemini-3-flash-preview",
+        model: "gemini-3.1-flash-lite-preview",
         contents: prompt,
         config: {
           responseMimeType: "application/json",
@@ -103,7 +103,7 @@ export default function ContentMachine() {
             disabled={loading}
           >
             <Sparkles className="w-4 h-4" />
-            {loading ? "GERANDO IDEIAS..." : "GERAR 30 IDEIAS VIRAIS"}
+            {loading ? "GERANDO IDEIAS..." : "GERAR 5 IDEIAS VIRAIS"}
           </Button>
         </CardContent>
       </Card>

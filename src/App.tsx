@@ -7,7 +7,6 @@ import Niches from "./pages/Niches";
 import ProfileCreator from "./pages/ProfileCreator";
 import ContentMachine from "./pages/ContentMachine";
 import ScriptGenerator from "./pages/ScriptGenerator";
-import ImageGenerator from "./pages/ImageGenerator";
 import Calendar from "./pages/Calendar";
 import Simulator from "./pages/Simulator";
 import Settings from "./pages/Settings";
@@ -36,7 +35,6 @@ export default function App() {
           <Route path="profile" element={<ProfileCreator />} />
           <Route path="content" element={<ContentMachine />} />
           <Route path="scripts" element={<ScriptGenerator />} />
-          <Route path="images" element={<ImageGenerator />} />
           <Route path="calendar" element={<Calendar />} />
           <Route path="simulator" element={<Simulator />} />
           <Route path="settings" element={<Settings />} />
