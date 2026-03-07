@@ -50,7 +50,15 @@ export default function ImageGenerator() {
       }
     } catch (error: any) {
       console.error(error);
-      setErrorMsg(error.message || "Erro ao gerar imagem.");
+      
+      let errorMessage = error.message || "Erro ao gerar imagem.";
+      
+      // Verifica se é o erro de cota 0 do plano gratuito
+      if (errorMessage.includes("429") || errorMessage.includes("Quota exceeded") || errorMessage.includes("limit: 0")) {
+        errorMessage = "Sua chave de API está no plano gratuito, que não possui cota para geração de imagens (limite: 0). Para gerar imagens, acesse o Google AI Studio, ative o faturamento (Billing) no seu projeto e gere uma nova chave.";
+      }
+      
+      setErrorMsg(errorMessage);
     } finally {
       setLoading(false);
     }
