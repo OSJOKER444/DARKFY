@@ -8,7 +8,6 @@ import ProfileCreator from "./pages/ProfileCreator";
 import ContentMachine from "./pages/ContentMachine";
 import ScriptGenerator from "./pages/ScriptGenerator";
 import Calendar from "./pages/Calendar";
-import Simulator from "./pages/Simulator";
 import Settings from "./pages/Settings";
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -36,7 +35,6 @@ export default function App() {
           <Route path="content" element={<ContentMachine />} />
           <Route path="scripts" element={<ScriptGenerator />} />
           <Route path="calendar" element={<Calendar />} />
-          <Route path="simulator" element={<Simulator />} />
           <Route path="settings" element={<Settings />} />
         </Route>
       </Routes>

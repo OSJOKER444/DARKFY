@@ -8,7 +8,6 @@ import {
   Video,
   FileText,
   Calendar,
-  DollarSign,
   Settings,
   LogOut,
   Menu,
@@ -24,7 +23,6 @@ const menuItems = [
   { icon: Video, label: "Máquina de Conteúdo", path: "/content" },
   { icon: FileText, label: "Gerador de Roteiros", path: "/scripts" },
   { icon: Calendar, label: "Calendário de Conteúdo", path: "/calendar" },
-  { icon: DollarSign, label: "Simulador de Monetização", path: "/simulator" },
   { icon: Settings, label: "Configurações", path: "/settings" },
 ];
 
