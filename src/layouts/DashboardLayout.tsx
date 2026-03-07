@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Outlet, Link, useLocation } from "react-router-dom";
 import {
   LayoutDashboard,
@@ -10,6 +11,8 @@ import {
   DollarSign,
   Settings,
   LogOut,
+  Menu,
+  X,
 } from "lucide-react";
 import { cn } from "@/src/lib/utils";
 
@@ -27,12 +30,39 @@ const menuItems = [
 
 export default function DashboardLayout() {
   const location = useLocation();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
     <div className="flex h-screen bg-[#0A0A0A] text-white overflow-hidden">
+      {/* Mobile Header */}
+      <div className="md:hidden flex items-center justify-between p-4 border-b border-[#2A2A2A] bg-[#0A0A0A] absolute top-0 left-0 right-0 z-20">
+        <div className="flex items-center gap-2 text-[#7B2EFF]">
+          <div className="w-8 h-8 rounded bg-[#141414] border border-[#2A2A2A] flex items-center justify-center">
+            <span className="font-display font-bold text-lg">D</span>
+          </div>
+          <span className="font-display font-bold text-xl tracking-wider">
+            DARKFY
+          </span>
+        </div>
+        <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="text-gray-400 hover:text-white">
+          {isSidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+        </button>
+      </div>
+
+      {/* Sidebar Overlay */}
+      {isSidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-30 md:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
-      <aside className="w-64 border-r border-[#2A2A2A] bg-[#0A0A0A] flex flex-col">
-        <div className="h-16 flex items-center px-6 border-b border-[#2A2A2A]">
+      <aside className={cn(
+        "fixed md:static inset-y-0 left-0 z-40 w-64 border-r border-[#2A2A2A] bg-[#0A0A0A] flex flex-col transform transition-transform duration-300 ease-in-out",
+        isSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+      )}>
+        <div className="h-16 flex items-center justify-between px-6 border-b border-[#2A2A2A]">
           <div className="flex items-center gap-2 text-[#7B2EFF]">
             <div className="w-8 h-8 rounded bg-[#141414] border border-[#2A2A2A] flex items-center justify-center">
               <span className="font-display font-bold text-lg">D</span>
@@ -41,6 +71,9 @@ export default function DashboardLayout() {
               DARKFY
             </span>
           </div>
+          <button onClick={() => setIsSidebarOpen(false)} className="md:hidden text-gray-400 hover:text-white">
+            <X className="w-5 h-5" />
+          </button>
         </div>
 
         <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
@@ -52,6 +85,7 @@ export default function DashboardLayout() {
               <Link
                 key={item.path}
                 to={item.path}
+                onClick={() => setIsSidebarOpen(false)}
                 className={cn(
                   "flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group",
                   isActive
@@ -99,8 +133,8 @@ export default function DashboardLayout() {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-y-auto bg-[#0A0A0A]">
-        <div className="p-8 max-w-7xl mx-auto">
+      <main className="flex-1 overflow-y-auto bg-[#0A0A0A] pt-16 md:pt-0">
+        <div className="p-4 md:p-8 max-w-7xl mx-auto">
           <Outlet />
         </div>
       </main>
