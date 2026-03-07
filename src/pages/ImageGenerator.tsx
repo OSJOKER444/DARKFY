@@ -6,8 +6,8 @@ import {
   CardContent,
 } from "@/src/components/ui/card";
 import { Sparkles, Download } from "lucide-react";
-import { GoogleGenAI } from "@google/genai";
 import { motion } from "motion/react";
+import { getGeminiClient } from "@/src/lib/gemini";
 
 export default function ImageGenerator() {
   const [prompt, setPrompt] = useState("");
@@ -23,7 +23,7 @@ export default function ImageGenerator() {
     setErrorMsg(null);
 
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+      const ai = getGeminiClient();
 
       const response = await ai.models.generateContent({
         model: "gemini-2.5-flash-image",

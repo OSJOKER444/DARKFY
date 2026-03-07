@@ -14,9 +14,9 @@ import {
   Crosshair,
   Video,
 } from "lucide-react";
-import { GoogleGenAI } from "@google/genai";
 import { motion } from "motion/react";
 import { updateMetric } from "@/src/lib/metrics";
+import { getGeminiClient } from "@/src/lib/gemini";
 
 export default function ProfileCreator() {
   const [niche, setNiche] = useState("");
@@ -28,7 +28,7 @@ export default function ProfileCreator() {
     setLoading(true);
 
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+      const ai = getGeminiClient();
       const prompt = `Crie uma estrutura de perfil "dark" (sem aparecer) para o TikTok no nicho de: ${niche}.
       
       Retorne APENAS um JSON válido neste formato:

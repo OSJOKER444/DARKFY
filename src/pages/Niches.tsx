@@ -8,9 +8,9 @@ import {
   CardTitle,
 } from "@/src/components/ui/card";
 import { Sparkles, Target, TrendingUp, DollarSign, Play } from "lucide-react";
-import { GoogleGenAI } from "@google/genai";
 import { motion } from "motion/react";
 import { updateMetric } from "@/src/lib/metrics";
+import { getGeminiClient } from "@/src/lib/gemini";
 
 export default function Niches() {
   const [category, setCategory] = useState("");
@@ -24,7 +24,7 @@ export default function Niches() {
     setLoading(true);
 
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+      const ai = getGeminiClient();
       const prompt = `Gere 3 ideias de nichos virais para TikTok "dark" (sem aparecer).
       Categoria: ${category}
       Idioma: ${language}

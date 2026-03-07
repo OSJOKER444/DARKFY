@@ -8,9 +8,9 @@ import {
   CardTitle,
 } from "@/src/components/ui/card";
 import { Sparkles, Video, ListVideo, Zap } from "lucide-react";
-import { GoogleGenAI } from "@google/genai";
 import { motion } from "motion/react";
 import { updateMetric } from "@/src/lib/metrics";
+import { getGeminiClient } from "@/src/lib/gemini";
 
 export default function ContentMachine() {
   const [niche, setNiche] = useState("");
@@ -24,7 +24,7 @@ export default function ContentMachine() {
     setLoading(true);
 
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+      const ai = getGeminiClient();
       const prompt = `Gere 5 ideias de vídeos virais para TikTok "dark" (sem aparecer).
       Nicho: ${niche}
       Tema: ${theme}
