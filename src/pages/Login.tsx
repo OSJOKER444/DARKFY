@@ -10,6 +10,7 @@ import {
   CardTitle,
 } from "@/src/components/ui/card";
 import { motion } from "motion/react";
+import { Crown } from "lucide-react";
 
 export default function Login() {
   const [isLogin, setIsLogin] = useState(true);
@@ -38,9 +39,7 @@ export default function Login() {
       >
         <div className="flex flex-col items-center mb-8">
           <div className="w-16 h-16 rounded-xl bg-[#141414] border border-[#2A2A2A] flex items-center justify-center mb-4 glow-neon">
-            <span className="font-display font-bold text-4xl text-[#7B2EFF]">
-              D
-            </span>
+            <Crown className="w-8 h-8 text-[#7B2EFF]" />
           </div>
           <h1 className="text-3xl font-display font-bold tracking-wider text-white">
             DARKFY

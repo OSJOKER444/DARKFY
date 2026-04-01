@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/src/components/ui/card";
-import { Sparkles, FileText, Copy, Check } from "lucide-react";
+import { Sparkles, FileText, Copy, Check, Save } from "lucide-react";
 import { motion } from "motion/react";
 import { getGeminiClient } from "@/src/lib/gemini";
 
@@ -18,6 +18,7 @@ export default function ScriptGenerator() {
   const [loading, setLoading] = useState(false);
   const [scripts, setScripts] = useState<any[]>([]);
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+  const [savedIndex, setSavedIndex] = useState<number | null>(null);
 
   const generateScripts = async () => {
     if (!niche || !theme || !duration) return;
@@ -66,6 +67,15 @@ export default function ScriptGenerator() {
     navigator.clipboard.writeText(text);
     setCopiedIndex(index);
     setTimeout(() => setCopiedIndex(null), 2000);
+  };
+
+  const saveScript = (script: any, index: number) => {
+    const savedScripts = JSON.parse(localStorage.getItem("darkfy_saved_scripts") || "[]");
+    const scriptToSave = { ...script, niche, theme, duration };
+    savedScripts.push(scriptToSave);
+    localStorage.setItem("darkfy_saved_scripts", JSON.stringify(savedScripts));
+    setSavedIndex(index);
+    setTimeout(() => setSavedIndex(null), 2000);
   };
 
   return (
@@ -133,18 +143,32 @@ export default function ScriptGenerator() {
               transition={{ delay: i * 0.1 }}
             >
               <Card className="bg-[#141414] border-[#2A2A2A] h-full flex flex-col relative group">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                  onClick={() => copyToClipboard(script, i)}
-                >
-                  {copiedIndex === i ? (
-                    <Check className="w-4 h-4 text-green-500" />
-                  ) : (
-                    <Copy className="w-4 h-4" />
-                  )}
-                </Button>
+                <div className="absolute top-2 right-2 flex gap-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => saveScript(script, i)}
+                    title="Salvar Roteiro"
+                  >
+                    {savedIndex === i ? (
+                      <Check className="w-4 h-4 text-green-500" />
+                    ) : (
+                      <Save className="w-4 h-4" />
+                    )}
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => copyToClipboard(script, i)}
+                    title="Copiar Roteiro"
+                  >
+                    {copiedIndex === i ? (
+                      <Check className="w-4 h-4 text-green-500" />
+                    ) : (
+                      <Copy className="w-4 h-4" />
+                    )}
+                  </Button>
+                </div>
                 <CardHeader className="pb-2">
                   <CardTitle className="text-lg flex items-center gap-2 text-[#7B2EFF]">
                     <FileText className="w-5 h-5" />
