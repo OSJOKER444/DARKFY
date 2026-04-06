@@ -16,6 +16,8 @@ import {
   X,
   BookOpen,
   Crown,
+  Wand2,
+  Scan,
 } from "lucide-react";
 import { cn } from "@/src/lib/utils";
 
@@ -27,6 +29,8 @@ const menuItems = [
   { icon: Video, label: "Máquina de Conteúdo", path: "/content" },
   { icon: FileText, label: "Gerador de Roteiros", path: "/scripts" },
   { icon: FileText, label: "Meus Roteiros", path: "/my-scripts" },
+  { icon: Wand2, label: "Prompter Profissional", path: "/prompter" },
+  { icon: Scan, label: "Modelagem Dark", path: "/modeling" },
   { icon: Calendar, label: "Calendário de Conteúdo", path: "/calendar" },
   { icon: BookOpen, label: "Como Funciona", path: "/how-it-works" },
   { icon: Settings, label: "Configurações", path: "/settings" },

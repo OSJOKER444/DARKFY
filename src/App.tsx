@@ -11,6 +11,8 @@ import ProfileCreator from "./pages/ProfileCreator";
 import ContentMachine from "./pages/ContentMachine";
 import ScriptGenerator from "./pages/ScriptGenerator";
 import MyScripts from "./pages/MyScripts";
+import ProfessionalPrompter from "./pages/ProfessionalPrompter";
+import DarkModeling from "./pages/DarkModeling";
 import HowItWorks from "./pages/HowItWorks";
 import Calendar from "./pages/Calendar";
 import Settings from "./pages/Settings";
@@ -54,6 +56,8 @@ export default function App() {
           <Route path="content" element={<ContentMachine />} />
           <Route path="scripts" element={<ScriptGenerator />} />
           <Route path="my-scripts" element={<MyScripts />} />
+          <Route path="prompter" element={<ProfessionalPrompter />} />
+          <Route path="modeling" element={<DarkModeling />} />
           <Route path="how-it-works" element={<HowItWorks />} />
           <Route path="calendar" element={<Calendar />} />
           <Route path="settings" element={<Settings />} />
