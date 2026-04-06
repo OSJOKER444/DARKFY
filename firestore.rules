@@ -1,0 +1,103 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: scripts
+    // Document ID: auto-generated
+    // Fields:
+    //   - userId: string (required) - The ID of the user who owns this script.
+    //   - niche: string (optional) - The niche of the script.
+    //   - theme: string (optional) - The theme of the script.
+    //   - hook: string (required) - The hook of the script.
+    //   - development: string (required) - The development/body of the script.
+    //   - cta: string (required) - The call to action of the script.
+    //   - createdAt: timestamp (required) - When the script was saved.
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    function isDocOwner() {
+      return isAuthenticated() && request.auth.uid == resource.data.userId;
+    }
+    
+    function uidUnchanged() {
+      return !('userId' in request.resource.data) || request.resource.data.userId == request.auth.uid;
+    }
+    
+    function uidNotModified() {
+      return !('userId' in request.resource.data) || request.resource.data.userId == resource.data.userId;
+    }
+    
+    function hasRequiredFields(fields) {
+      return request.resource.data.keys().hasAll(fields);
+    }
+    
+    function hasOnlyAllowedFields(fields) {
+      return request.resource.data.keys().hasOnly(fields);
+    }
+    
+    function isValidString(field, minLen, maxLen) {
+      return request.resource.data[field] is string &&
+        request.resource.data[field].size() >= minLen &&
+        request.resource.data[field].size() <= maxLen;
+    }
+
+    function isValidOptionalString(field, minLen, maxLen) {
+      return !(field in request.resource.data) ||
+             (request.resource.data[field] is string &&
+              request.resource.data[field].size() >= minLen &&
+              request.resource.data[field].size() <= maxLen);
+    }
+    
+    function areImmutableFieldsUnchanged(fields) {
+      return !request.resource.data.diff(resource.data).affectedKeys().hasAny(fields);
+    }
+
+    // ===============================================================
+    // Domain Validators
+    // ===============================================================
+    
+    function isValidScript(data) {
+      return hasOnlyAllowedFields(['userId', 'niche', 'theme', 'hook', 'development', 'cta', 'createdAt']) &&
+             hasRequiredFields(['userId', 'hook', 'development', 'cta', 'createdAt']) &&
+             data.userId is string && data.userId.size() > 0 && data.userId.size() < 100 &&
+             isValidOptionalString('niche', 0, 200) &&
+             isValidOptionalString('theme', 0, 200) &&
+             isValidString('hook', 1, 2000) &&
+             isValidString('development', 1, 10000) &&
+             isValidString('cta', 1, 2000) &&
+             data.createdAt is timestamp;
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    match /scripts/{scriptId} {
+      allow read: if isDocOwner();
+      allow create: if isAuthenticated() && 
+                    isValidScript(request.resource.data) && 
+                    uidUnchanged();
+      allow update: if isDocOwner() && 
+                    isValidScript(request.resource.data) && 
+                    uidNotModified() &&
+                    areImmutableFieldsUnchanged(['createdAt']);
+      allow delete: if isDocOwner();
+    }
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "entities": {
+    "Script": {
+      "title": "Script",
+      "description": "A generated video script saved by the user.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "The ID of the user who owns this script."
+        },
+        "niche": {
+          "type": "string",
+          "description": "The niche of the script."
+        },
+        "theme": {
+          "type": "string",
+          "description": "The theme of the script."
+        },
+        "hook": {
+          "type": "string",
+          "description": "The hook of the script."
+        },
+        "development": {
+          "type": "string",
+          "description": "The development/body of the script."
+        },
+        "cta": {
+          "type": "string",
+          "description": "The call to action of the script."
+        },
+        "createdAt": {
+          "type": "timestamp",
+          "description": "When the script was saved."
+        }
+      },
+      "required": ["userId", "hook", "development", "cta", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/scripts/{scriptId}": {
+      "schema": "Script",
+      "description": "Saved scripts for users."
+    }
+  }
+}

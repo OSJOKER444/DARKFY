@@ -10,6 +10,8 @@ import {
 import { Sparkles, FileText, Copy, Check, Save } from "lucide-react";
 import { motion } from "motion/react";
 import { getGeminiClient } from "@/src/lib/gemini";
+import { db, auth } from "../firebase";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 export default function ScriptGenerator() {
   const [niche, setNiche] = useState("");
@@ -69,13 +71,28 @@ export default function ScriptGenerator() {
     setTimeout(() => setCopiedIndex(null), 2000);
   };
 
-  const saveScript = (script: any, index: number) => {
-    const savedScripts = JSON.parse(localStorage.getItem("darkfy_saved_scripts") || "[]");
-    const scriptToSave = { ...script, niche, theme, duration };
-    savedScripts.push(scriptToSave);
-    localStorage.setItem("darkfy_saved_scripts", JSON.stringify(savedScripts));
-    setSavedIndex(index);
-    setTimeout(() => setSavedIndex(null), 2000);
+  const saveScript = async (script: any, index: number) => {
+    if (!auth.currentUser) {
+      alert("Você precisa estar logado para salvar roteiros.");
+      return;
+    }
+
+    try {
+      await addDoc(collection(db, "scripts"), {
+        userId: auth.currentUser.uid,
+        niche: niche,
+        theme: theme,
+        hook: script.hook,
+        development: script.development,
+        cta: script.cta,
+        createdAt: serverTimestamp()
+      });
+      setSavedIndex(index);
+      setTimeout(() => setSavedIndex(null), 2000);
+    } catch (error) {
+      console.error("Erro ao salvar roteiro:", error);
+      alert("Erro ao salvar roteiro. Tente novamente.");
+    }
   };
 
   return (

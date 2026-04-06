@@ -1,5 +1,7 @@
-import { useState } from "react";
-import { Outlet, Link, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
+import { onAuthStateChanged, User } from "firebase/auth";
+import { auth, logout } from "../firebase";
 import {
   LayoutDashboard,
   Workflow,
@@ -32,7 +34,21 @@ const menuItems = [
 
 export default function DashboardLayout() {
   const location = useLocation();
+  const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const handleLogout = async () => {
+    await logout();
+    navigate("/login");
+  };
 
   return (
     <div className="flex h-screen bg-[#0A0A0A] text-white overflow-hidden">
@@ -111,21 +127,22 @@ export default function DashboardLayout() {
 
         <div className="p-4 border-t border-[#2A2A2A]">
           <div className="flex items-center justify-between px-3 py-2">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-[#141414] border border-[#2A2A2A] flex items-center justify-center overflow-hidden">
-                <UserCircle className="w-5 h-5 text-gray-400" />
+            <div className="flex items-center gap-3 overflow-hidden">
+              <div className="w-8 h-8 rounded-full bg-[#141414] border border-[#2A2A2A] flex items-center justify-center overflow-hidden shrink-0">
+                {user?.photoURL ? (
+                  <img src={user.photoURL} alt="Profile" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                ) : (
+                  <UserCircle className="w-5 h-5 text-gray-400" />
+                )}
               </div>
-              <div className="flex flex-col">
-                <span className="text-sm font-medium">Hacker User</span>
-                <span className="text-xs text-gray-500">Pro Plan</span>
+              <div className="flex flex-col truncate">
+                <span className="text-sm font-medium truncate">{user?.displayName || "Usuário"}</span>
+                <span className="text-xs text-gray-500 truncate">{user?.email || ""}</span>
               </div>
             </div>
             <button 
-              onClick={() => {
-                localStorage.removeItem("darkfy_auth");
-                window.location.href = "/login";
-              }}
-              className="text-gray-500 hover:text-red-500 transition-colors"
+              onClick={handleLogout}
+              className="text-gray-500 hover:text-red-500 transition-colors shrink-0 ml-2"
               title="Sair"
             >
               <LogOut className="w-4 h-4" />

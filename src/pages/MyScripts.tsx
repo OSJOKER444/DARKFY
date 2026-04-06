@@ -8,14 +8,39 @@ import {
 } from "@/src/components/ui/card";
 import { FileText, Copy, Check, Trash2 } from "lucide-react";
 import { motion } from "motion/react";
+import { db, auth } from "../firebase";
+import { collection, query, where, onSnapshot, deleteDoc, doc, orderBy } from "firebase/firestore";
 
 export default function MyScripts() {
   const [savedScripts, setSavedScripts] = useState<any[]>([]);
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const scripts = JSON.parse(localStorage.getItem("darkfy_saved_scripts") || "[]");
-    setSavedScripts(scripts);
+    if (!auth.currentUser) {
+      setLoading(false);
+      return;
+    }
+
+    const q = query(
+      collection(db, "scripts"),
+      where("userId", "==", auth.currentUser.uid),
+      orderBy("createdAt", "desc")
+    );
+
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const scriptsData = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      setSavedScripts(scriptsData);
+      setLoading(false);
+    }, (error) => {
+      console.error("Error fetching scripts:", error);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
   }, []);
 
   const copyToClipboard = (script: any, index: number) => {
@@ -25,12 +50,18 @@ export default function MyScripts() {
     setTimeout(() => setCopiedIndex(null), 2000);
   };
 
-  const deleteScript = (index: number) => {
-    const newScripts = [...savedScripts];
-    newScripts.splice(index, 1);
-    setSavedScripts(newScripts);
-    localStorage.setItem("darkfy_saved_scripts", JSON.stringify(newScripts));
+  const deleteScript = async (id: string) => {
+    try {
+      await deleteDoc(doc(db, "scripts", id));
+    } catch (error) {
+      console.error("Error deleting script:", error);
+      alert("Erro ao excluir roteiro.");
+    }
   };
+
+  if (loading) {
+    return <div className="text-gray-400">Carregando roteiros...</div>;
+  }
 
   return (
     <div className="space-y-8">
@@ -75,7 +106,7 @@ export default function MyScripts() {
                     variant="ghost"
                     size="icon"
                     className="text-red-500 hover:text-red-400"
-                    onClick={() => deleteScript(i)}
+                    onClick={() => deleteScript(script.id)}
                   >
                     <Trash2 className="w-4 h-4" />
                   </Button>

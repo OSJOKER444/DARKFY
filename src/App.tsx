@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { onAuthStateChanged, User } from "firebase/auth";
+import { auth } from "./firebase";
 import DashboardLayout from "./layouts/DashboardLayout";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
@@ -13,11 +15,14 @@ import HowItWorks from "./pages/HowItWorks";
 import Calendar from "./pages/Calendar";
 import Settings from "./pages/Settings";
 
-function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const isAuth = localStorage.getItem("darkfy_auth") === "true";
+function ProtectedRoute({ children, user, loading }: { children: React.ReactNode, user: User | null, loading: boolean }) {
   const location = useLocation();
 
-  if (!isAuth) {
+  if (loading) {
+    return <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center text-white">Carregando...</div>;
+  }
+
+  if (!user) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
@@ -25,11 +30,22 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      setLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
+
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/" element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
+        <Route path="/login" element={user ? <Navigate to="/dashboard" replace /> : <Login />} />
+        <Route path="/" element={<ProtectedRoute user={user} loading={loading}><DashboardLayout /></ProtectedRoute>}>
           <Route index element={<Navigate to="/dashboard" replace />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="planner" element={<Planner />} />
