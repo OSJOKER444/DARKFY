@@ -30,7 +30,13 @@ export default function Login() {
       navigate("/dashboard");
     } catch (err: any) {
       console.error("Login error:", err);
-      setError(`Erro ao fazer login com Google: ${err.message || "Tente novamente."}`);
+      if (err.code === 'auth/unauthorized-domain') {
+        setError("Erro: Domínio não autorizado. Adicione a URL deste app na aba 'Authorized domains' no Firebase Authentication.");
+      } else if (err.code === 'auth/popup-closed-by-user') {
+        setError("O pop-up de login foi fechado. Se estiver no preview, abra o app em uma nova guia.");
+      } else {
+        setError(`Erro ao fazer login com Google: ${err.message || "Tente novamente."}`);
+      }
     } finally {
       setIsLoading(false);
     }
