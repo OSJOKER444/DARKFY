@@ -61,6 +61,8 @@ export default function Login() {
         setError("Email ou senha incorretos.");
       } else if (err.code === 'auth/weak-password') {
         setError("A senha deve ter pelo menos 6 caracteres.");
+      } else if (err.code === 'auth/operation-not-allowed') {
+        setError("O login por email e senha não está ativado no Firebase. Ative-o no painel do Firebase Authentication.");
       } else {
         setError(`Erro na autenticação: ${err.message || "Tente novamente."}`);
       }
