@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/src/components/ui/button";
+import { Input } from "@/src/components/ui/input";
 import {
   Card,
   CardContent,
@@ -10,9 +11,13 @@ import {
 } from "@/src/components/ui/card";
 import { motion } from "motion/react";
 import { Crown } from "lucide-react";
-import { signInWithGoogle } from "../firebase";
+import { signInWithGoogle, loginWithEmail, registerWithEmail } from "../firebase";
 
 export default function Login() {
+  const [isLogin, setIsLogin] = useState(true);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -25,7 +30,40 @@ export default function Login() {
       navigate("/dashboard");
     } catch (err: any) {
       console.error("Login error:", err);
-      setError(`Erro ao fazer login: ${err.message || "Tente novamente."}`);
+      setError(`Erro ao fazer login com Google: ${err.message || "Tente novamente."}`);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleEmailAuth = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+
+    if (!isLogin && password !== confirmPassword) {
+      setError("As senhas não coincidem.");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      if (isLogin) {
+        await loginWithEmail(email, password);
+      } else {
+        await registerWithEmail(email, password);
+      }
+      navigate("/dashboard");
+    } catch (err: any) {
+      console.error("Auth error:", err);
+      if (err.code === 'auth/email-already-in-use') {
+        setError("Este email já está em uso.");
+      } else if (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found') {
+        setError("Email ou senha incorretos.");
+      } else if (err.code === 'auth/weak-password') {
+        setError("A senha deve ter pelo menos 6 caracteres.");
+      } else {
+        setError(`Erro na autenticação: ${err.message || "Tente novamente."}`);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -58,12 +96,72 @@ export default function Login() {
 
         <Card className="border-[#2A2A2A] bg-[#141414]/80 backdrop-blur-xl">
           <CardHeader className="text-center">
-            <CardTitle>Acessar Plataforma</CardTitle>
+            <CardTitle>
+              {isLogin ? "Acessar Plataforma" : "Criar Conta"}
+            </CardTitle>
             <CardDescription>
-              Faça login com sua conta do Google para acessar o dashboard.
+              {isLogin
+                ? "Entre com suas credenciais para acessar o dashboard."
+                : "Crie sua conta para começar a gerar conteúdo dark."}
             </CardDescription>
           </CardHeader>
-          <CardContent className="flex flex-col items-center pt-4">
+          <CardContent className="flex flex-col pt-4">
+            <form onSubmit={handleEmailAuth} className="space-y-4 w-full">
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-300">
+                  Email
+                </label>
+                <Input 
+                  type="email" 
+                  placeholder="hacker@darkfy.com" 
+                  className="bg-[#0A0A0A] border-[#2A2A2A] text-white focus-visible:ring-[#7B2EFF]"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required 
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-300">
+                  Senha
+                </label>
+                <Input 
+                  type="password" 
+                  placeholder="••••••••" 
+                  className="bg-[#0A0A0A] border-[#2A2A2A] text-white focus-visible:ring-[#7B2EFF]"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required 
+                />
+              </div>
+              {!isLogin && (
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-300">
+                    Confirmar Senha
+                  </label>
+                  <Input 
+                    type="password" 
+                    placeholder="••••••••" 
+                    className="bg-[#0A0A0A] border-[#2A2A2A] text-white focus-visible:ring-[#7B2EFF]"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required 
+                  />
+                </div>
+              )}
+              <Button type="submit" variant="neon" className="w-full mt-6 py-6 text-lg" disabled={isLoading}>
+                {isLoading ? "Processando..." : (isLogin ? "Entrar com Email" : "Cadastrar com Email")}
+              </Button>
+            </form>
+
+            <div className="relative my-6 w-full">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t border-[#2A2A2A]" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-[#141414] px-2 text-gray-400">Ou continue com</span>
+              </div>
+            </div>
+
             <Button 
               type="button" 
               variant="outline" 
@@ -97,6 +195,21 @@ export default function Login() {
                 <p className="text-red-500 text-sm text-center">{error}</p>
               </div>
             )}
+
+            <div className="mt-6 text-center text-sm w-full">
+              <button
+                onClick={() => {
+                  setIsLogin(!isLogin);
+                  setError("");
+                }}
+                className="text-gray-400 hover:text-[#7B2EFF] transition-colors"
+                type="button"
+              >
+                {isLogin
+                  ? "Não tem uma conta? Cadastre-se"
+                  : "Já tem uma conta? Faça login"}
+              </button>
+            </div>
           </CardContent>
         </Card>
       </motion.div>
