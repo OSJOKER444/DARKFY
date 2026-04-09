@@ -59,9 +59,9 @@ Retorne APENAS um JSON válido com a seguinte estrutura exata:
       const cleanedText = text.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
       const data = JSON.parse(cleanedText);
       setResult(data);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Erro ao gerar modelagem:", error);
-      alert("Erro ao analisar o link. Verifique se é um link válido e tente novamente.");
+      alert(`Erro ao analisar o link: ${error.message || "Verifique se é um link válido e tente novamente."}`);
     } finally {
       setLoading(false);
     }

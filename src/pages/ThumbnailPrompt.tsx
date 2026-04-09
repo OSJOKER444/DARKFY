@@ -73,9 +73,9 @@ Retorne APENAS um JSON válido com a seguinte estrutura exata:
       const cleanedText = text.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
       const data = JSON.parse(cleanedText);
       setResult(data);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Erro ao gerar prompt:", error);
-      alert("Erro ao gerar prompt. Verifique o console para mais detalhes.");
+      alert(`Erro ao gerar prompt: ${error.message || "Verifique o console para mais detalhes."}`);
     } finally {
       setLoading(false);
     }
