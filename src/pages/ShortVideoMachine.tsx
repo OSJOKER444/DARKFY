@@ -72,11 +72,13 @@ Retorne APENAS um JSON válido com a seguinte estrutura exata:
         }
       });
 
-      const data = JSON.parse(response.text || "{}");
+      const text = response.text || "{}";
+      const cleanedText = text.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
+      const data = JSON.parse(cleanedText);
       setResult(data);
     } catch (error) {
       console.error("Erro ao gerar conteúdo:", error);
-      alert("Erro ao gerar conteúdo. Tente novamente.");
+      alert("Erro ao gerar conteúdo. Verifique o console para mais detalhes.");
     } finally {
       setLoading(false);
     }

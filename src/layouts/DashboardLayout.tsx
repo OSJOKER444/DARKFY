@@ -22,7 +22,6 @@ import {
   Youtube,
   ImageIcon,
 } from "lucide-react";
-import { DarkfyLogo } from "@/src/components/DarkfyLogo";
 import { cn } from "@/src/lib/utils";
 
 const menuItems = [
@@ -67,7 +66,7 @@ export default function DashboardLayout() {
       <div className="md:hidden flex items-center justify-between p-4 border-b border-[#2A2A2A] bg-[#0A0A0A] absolute top-0 left-0 right-0 z-20">
         <div className="flex items-center gap-2 text-[#7B2EFF]">
           <div className="w-8 h-8 rounded bg-[#141414] border border-[#2A2A2A] flex items-center justify-center">
-            <DarkfyLogo className="w-6 h-6" />
+            <Crown className="w-5 h-5 text-[#7B2EFF]" />
           </div>
           <span className="font-display font-bold text-xl tracking-wider">
             DARKFY
@@ -94,7 +93,7 @@ export default function DashboardLayout() {
         <div className="h-16 flex items-center justify-between px-6 border-b border-[#2A2A2A]">
           <div className="flex items-center gap-2 text-[#7B2EFF]">
             <div className="w-8 h-8 rounded bg-[#141414] border border-[#2A2A2A] flex items-center justify-center">
-              <DarkfyLogo className="w-6 h-6" />
+              <Crown className="w-5 h-5 text-[#7B2EFF]" />
             </div>
             <span className="font-display font-bold text-xl tracking-wider">
               DARKFY
