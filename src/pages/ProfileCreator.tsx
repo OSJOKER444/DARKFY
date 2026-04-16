@@ -48,11 +48,14 @@ export default function ProfileCreator() {
         },
       });
 
-      const data = JSON.parse(response.text || "{}");
+      const text = response.text || "{}";
+      const cleanedText = text.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
+      const data = JSON.parse(cleanedText);
       setProfile(data);
       updateMetric("darkfy_metric_profiles", 1);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
+      alert(`Erro ao gerar perfil: ${error.message || "Verifique o console para mais detalhes."}`);
     } finally {
       setLoading(false);
     }

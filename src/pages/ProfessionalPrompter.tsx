@@ -46,8 +46,9 @@ Retorne APENAS o prompt final em inglês, sem introduções, sem explicações e
       });
 
       setGeneratedPrompt(response.text || "");
-    } catch (error) {
+    } catch (error: any) {
       console.error("Erro ao gerar prompt:", error);
+      alert(`Erro ao gerar prompt: ${error.message || "Verifique o console para mais detalhes."}`);
     } finally {
       setLoading(false);
     }

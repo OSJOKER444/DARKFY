@@ -55,10 +55,13 @@ export default function ScriptGenerator() {
         },
       });
 
-      const data = JSON.parse(response.text || "[]");
+      const text = response.text || "[]";
+      const cleanedText = text.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
+      const data = JSON.parse(cleanedText);
       setScripts(data);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
+      alert(`Erro ao gerar roteiros: ${error.message || "Verifique o console para mais detalhes."}`);
     } finally {
       setLoading(false);
     }

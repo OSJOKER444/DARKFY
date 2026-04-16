@@ -48,11 +48,14 @@ export default function Niches() {
         },
       });
 
-      const data = JSON.parse(response.text || "[]");
+      const text = response.text || "[]";
+      const cleanedText = text.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
+      const data = JSON.parse(cleanedText);
       setResults(data);
       updateMetric("darkfy_metric_niches", data.length);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
+      alert(`Erro ao gerar nichos: ${error.message || "Verifique o console para mais detalhes."}`);
     } finally {
       setLoading(false);
     }
