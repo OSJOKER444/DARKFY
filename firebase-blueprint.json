@@ -35,12 +35,68 @@
         }
       },
       "required": ["userId", "hook", "development", "cta", "createdAt"]
+    },
+    "Chat": {
+      "title": "Chat",
+      "description": "A chat session with the AI.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "The ID of the user who owns this chat."
+        },
+        "title": {
+          "type": "string",
+          "description": "The auto-generated title for the chat."
+        },
+        "createdAt": {
+          "type": "timestamp",
+          "description": "When the chat was started."
+        },
+        "updatedAt": {
+          "type": "timestamp",
+          "description": "When the chat was last updated."
+        }
+      },
+      "required": ["userId", "title", "createdAt", "updatedAt"]
+    },
+    "ChatMessage": {
+      "title": "ChatMessage",
+      "description": "A single message in a chat session.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "The ID of the user. Used for security."
+        },
+        "role": {
+          "type": "string",
+          "description": "The role of the sender: user or model."
+        },
+        "text": {
+          "type": "string",
+          "description": "The message text."
+        },
+        "createdAt": {
+          "type": "timestamp",
+          "description": "When the message was sent."
+        }
+      },
+      "required": ["userId", "role", "text", "createdAt"]
     }
   },
   "firestore": {
     "/scripts/{scriptId}": {
       "schema": "Script",
       "description": "Saved scripts for users."
+    },
+    "/chats/{chatId}": {
+      "schema": "Chat",
+      "description": "Chat sessions for users."
+    },
+    "/chats/{chatId}/messages/{messageId}": {
+      "schema": "ChatMessage",
+      "description": "Messages within a chat."
     }
   }
 }

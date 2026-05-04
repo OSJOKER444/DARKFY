@@ -84,6 +84,24 @@ service cloud.firestore {
              data.createdAt is timestamp;
     }
 
+    function isValidChat(data) {
+      return hasOnlyAllowedFields(['userId', 'title', 'createdAt', 'updatedAt']) &&
+             hasRequiredFields(['userId', 'title', 'createdAt', 'updatedAt']) &&
+             isValidString('userId', 1, 100) &&
+             isValidString('title', 1, 300) &&
+             data.createdAt is timestamp &&
+             data.updatedAt is timestamp;
+    }
+
+    function isValidChatMessage(data) {
+      return hasOnlyAllowedFields(['userId', 'role', 'text', 'createdAt']) &&
+             hasRequiredFields(['userId', 'role', 'text', 'createdAt']) &&
+             isValidString('userId', 1, 100) &&
+             isValidString('role', 1, 50) &&
+             isValidString('text', 1, 50000) &&
+             data.createdAt is timestamp;
+    }
+
     // ===============================================================
     // Rules
     // ===============================================================
@@ -98,6 +116,27 @@ service cloud.firestore {
                     uidNotModified() &&
                     areImmutableFieldsUnchanged(['createdAt']);
       allow delete: if isDocOwner();
+    }
+
+    match /chats/{chatId} {
+      allow read: if isDocOwner();
+      allow create: if isAuthenticated() &&
+                    isValidChat(request.resource.data) &&
+                    uidUnchanged();
+      allow update: if isDocOwner() &&
+                    isValidChat(request.resource.data) &&
+                    uidNotModified() &&
+                    areImmutableFieldsUnchanged(['createdAt']);
+      allow delete: if isDocOwner();
+
+      match /messages/{messageId} {
+        allow read: if isDocOwner();
+        allow create: if isAuthenticated() &&
+                      isValidChatMessage(request.resource.data) &&
+                      uidUnchanged();
+        allow update: if false; // Messages shouldn't be updated
+        allow delete: if isDocOwner();
+      }
     }
   }
 }
