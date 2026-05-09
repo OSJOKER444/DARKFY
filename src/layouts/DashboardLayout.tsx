@@ -22,6 +22,7 @@ import {
   Youtube,
   ImageIcon,
   Bot,
+  Wrench,
 } from "lucide-react";
 import { cn } from "@/src/lib/utils";
 
@@ -31,15 +32,16 @@ const menuItems = [
   { icon: Workflow, label: "Planejador Estratégico", path: "/planner" },
   { icon: TrendingUp, label: "Nichos Virais", path: "/niches" },
   { icon: UserCircle, label: "Criador de Perfil Dark", path: "/profile" },
-  { icon: FileText, label: "Gerador de Roteiros", path: "/scripts" },
+  { icon: FileText, label: "Gerador de Narração Viral", path: "/scripts" },
   { icon: FileText, label: "Meus Roteiros", path: "/my-scripts" },
   { icon: Wand2, label: "Prompter Profissional", path: "/prompter" },
-  { icon: Scan, label: "Modelagem Dark", path: "/modeling" },
+  { icon: Scan, label: "Modelador de Conteúdo", path: "/modeling" },
   { icon: PlayCircle, label: "Vídeos Curtos", path: "/short-video" },
   { icon: Youtube, label: "Perfil YouTube", path: "/youtube-profile" },
   { icon: ImageIcon, label: "Thumbnail IA", path: "/thumbnail-prompt" },
   { icon: FileText, label: "Roteiro Longo", path: "/long-video" },
   { icon: Calendar, label: "Calendário de Conteúdo", path: "/calendar" },
+  { icon: Wrench, label: "Ferramentas IA", path: "/ai-tools" },
   { icon: BookOpen, label: "Como Funciona", path: "/how-it-works" },
   { icon: Settings, label: "Configurações", path: "/settings" },
 ];

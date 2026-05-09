@@ -20,6 +20,7 @@ import DarkfyAI from "./pages/DarkfyAI";
 import HowItWorks from "./pages/HowItWorks";
 import Calendar from "./pages/Calendar";
 import Settings from "./pages/Settings";
+import AiTools from "./pages/AiTools";
 
 function ProtectedRoute({ children, user, loading }: { children: React.ReactNode, user: User | null, loading: boolean }) {
   const location = useLocation();
@@ -66,6 +67,7 @@ export default function App() {
           <Route path="thumbnail-prompt" element={<ThumbnailPrompt />} />
           <Route path="long-video" element={<LongVideoScript />} />
           <Route path="ai-consultant" element={<DarkfyAI />} />
+          <Route path="ai-tools" element={<AiTools />} />
           <Route path="how-it-works" element={<HowItWorks />} />
           <Route path="calendar" element={<Calendar />} />
           <Route path="settings" element={<Settings />} />

@@ -26,6 +26,7 @@ export default function YouTubeDarkProfile() {
     keywords: string,
     strategy: string,
     thumbnailStyle: string,
+    bannerStyle: string,
     retentionType: string
   } | null>(null);
   const [copiedSection, setCopiedSection] = useState<string | null>(null);
@@ -59,6 +60,7 @@ Retorne APENAS um JSON válido com a seguinte estrutura exata:
   "keywords": "PALAVRAS-CHAVE — principais termos para SEO.",
   "strategy": "ESTRATÉGIA DE CONTEÚDO INICIAL (7 dias) — o que postar primeiro e por quê.",
   "thumbnailStyle": "ESTILO DE THUMBNAIL recomendado (ex: emocional, curiosidade, contraste).",
+  "bannerStyle": "ESTILO DE BANNER DO CANAL recomendado (composição, cores, e imagens chaves para a capa do canal).",
   "retentionType": "TIPO DE RETENÇÃO (história, lista, revelação, etc.)."
 }`;
 
@@ -193,7 +195,7 @@ Retorne APENAS um JSON válido com a seguinte estrutura exata:
           {renderSection("Nomes & Descrição", <UserCircle className="w-5 h-5" />, `NOMES:\n${result.channelNames}\n\nDESCRIÇÃO:\n${result.description}`, "names", "text-[#7B2EFF]")}
           {renderSection("Persona & Posicionamento", <Target className="w-5 h-5" />, `PERSONA:\n${result.persona}\n\nPOSICIONAMENTO:\n${result.positioning}`, "persona", "text-blue-500")}
           {renderSection("Ideias de Vídeos & SEO", <Lightbulb className="w-5 h-5" />, `VÍDEOS:\n${result.videoIdeas}\n\nPALAVRAS-CHAVE:\n${result.keywords}`, "videos", "text-yellow-500")}
-          {renderSection("Estratégia & Retenção", <Youtube className="w-5 h-5" />, `ESTRATÉGIA (7 DIAS):\n${result.strategy}\n\nTHUMBNAIL:\n${result.thumbnailStyle}\n\nRETENÇÃO:\n${result.retentionType}`, "strategy", "text-red-500")}
+          {renderSection("Estratégia & Visual", <Youtube className="w-5 h-5" />, `ESTRATÉGIA (7 DIAS):\n${result.strategy}\n\nTHUMBNAIL:\n${result.thumbnailStyle}\n\nBANNER DO CANAL:\n${result.bannerStyle}\n\nRETENÇÃO:\n${result.retentionType}`, "strategy", "text-red-500")}
         </motion.div>
       )}
     </div>

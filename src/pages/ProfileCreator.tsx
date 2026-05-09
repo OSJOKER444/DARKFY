@@ -29,15 +29,18 @@ export default function ProfileCreator() {
 
     try {
       const ai = getGeminiClient();
-      const prompt = `Crie uma estrutura de perfil "dark" (sem aparecer) para o TikTok no nicho de: ${niche}.
+      const prompt = `Crie uma estrutura completa de perfil "dark" (sem aparecer) para o TikTok e Instagram no nicho de: ${niche}.
       
-      Retorne APENAS um JSON válido neste formato:
+      Retorne APENAS um JSON válido neste formato (todas as chaves são obrigatórias):
       {
-        "name": "Nome do Perfil",
-        "bio": "Bio otimizada com CTA",
-        "positioning": "Posicionamento da marca",
-        "style": "Estilo visual e de conteúdo",
-        "ideas": ["Ideia 1", "Ideia 2", "Ideia 3"]
+        "name": "Nome do Perfil (criativo e chamativo)",
+        "profilePicture": "Sugestão detalhada do que deve ser a foto de perfil/logo (ex: Logo minimalista em neon roxo com fundo escuro exibindo um ícone de...)",
+        "visualIdentity": "Paleta de cores principal, fontes recomendadas e estilo visual geral",
+        "bio": "Bio otimizada para conversão com CTA",
+        "positioning": "Posicionamento de marca e tom de voz",
+        "strategy": "Estratégia principal de crescimento e monetização (ex: vender infoproduto, parcerias, views)",
+        "style": "Estilo de roteiro, edição e formato do conteúdo (ex: voz sintética calma, cortes rápidos, takes de fundo de natureza)",
+        "ideas": ["Ideia de primeiro vídeo para viralizar", "Ideia de segundo vídeo para reter", "Ideia de terceiro vídeo para vender"]
       }`;
 
       const response = await ai.models.generateContent({
@@ -98,68 +101,103 @@ export default function ProfileCreator() {
           animate={{ opacity: 1, y: 0 }}
           className="grid gap-6 md:grid-cols-2"
         >
-          <Card className="bg-[#141414] border-[#2A2A2A]">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-[#7B2EFF]">
-                <UserCircle className="w-5 h-5" />
-                Identidade
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div>
-                <span className="text-sm text-gray-400 block mb-1">
-                  Nome do Perfil
-                </span>
-                <p className="font-medium text-lg">{profile.name}</p>
-              </div>
-              <div>
-                <span className="text-sm text-gray-400 block mb-1 flex items-center gap-1">
-                  <AlignLeft className="w-4 h-4" /> Bio Otimizada
-                </span>
-                <p className="bg-[#0A0A0A] p-3 rounded-md border border-[#2A2A2A] text-sm whitespace-pre-wrap">
-                  {profile.bio}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
+          <div className="space-y-6">
+            <Card className="bg-[#141414] border-[#2A2A2A]">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-[#7B2EFF]">
+                  <UserCircle className="w-5 h-5" />
+                  Identidade Base
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div>
+                  <span className="text-sm text-gray-400 block mb-1">
+                    Nome do Perfil
+                  </span>
+                  <p className="font-medium text-lg">{profile.name}</p>
+                </div>
+                <div>
+                  <span className="text-sm text-gray-400 block mb-1 flex items-center gap-1">
+                    <AlignLeft className="w-4 h-4" /> Bio Otimizada
+                  </span>
+                  <p className="bg-[#0A0A0A] p-3 rounded-md border border-[#2A2A2A] text-sm whitespace-pre-wrap">
+                    {profile.bio}
+                  </p>
+                </div>
+                <div>
+                  <span className="text-sm text-gray-400 block mb-1">
+                    Tom de Voz e Posicionamento
+                  </span>
+                  <p className="text-sm">{profile.positioning}</p>
+                </div>
+              </CardContent>
+            </Card>
 
-          <Card className="bg-[#141414] border-[#2A2A2A]">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-[#7B2EFF]">
-                <Crosshair className="w-5 h-5" />
-                Estratégia
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div>
-                <span className="text-sm text-gray-400 block mb-1">
-                  Posicionamento
-                </span>
-                <p className="text-sm">{profile.positioning}</p>
-              </div>
-              <div>
-                <span className="text-sm text-gray-400 block mb-1">
-                  Estilo de Conteúdo
-                </span>
-                <p className="text-sm">{profile.style}</p>
-              </div>
-              <div>
-                <span className="text-sm text-gray-400 block mb-2 flex items-center gap-1">
-                  <Video className="w-4 h-4" /> Primeiros Vídeos
-                </span>
-                <ul className="space-y-2">
-                  {profile.ideas.map((idea: string, i: number) => (
-                    <li
-                      key={i}
-                      className="text-sm bg-[#0A0A0A] p-2 rounded border border-[#2A2A2A]"
-                    >
-                      {idea}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </CardContent>
-          </Card>
+            <Card className="bg-[#141414] border-[#2A2A2A]">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-pink-500">
+                  <Sparkles className="w-5 h-5" />
+                  Visual
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div>
+                  <span className="text-sm text-gray-400 block mb-1">
+                    Foto de Perfil / Logo
+                  </span>
+                  <p className="text-sm bg-[#0A0A0A] p-3 rounded-md border border-[#2A2A2A]">{profile.profilePicture}</p>
+                </div>
+                <div>
+                  <span className="text-sm text-gray-400 block mb-1">
+                    Identidade Visual (Cores)
+                  </span>
+                  <p className="text-sm">{profile.visualIdentity}</p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="space-y-6">
+            <Card className="bg-[#141414] border-[#2A2A2A]">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-orange-500">
+                  <Crosshair className="w-5 h-5" />
+                  Estratégia e Conteúdo
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div>
+                  <span className="text-sm text-gray-400 block mb-1">
+                    Plano de Crescimento/Monetização
+                  </span>
+                  <p className="bg-[#0A0A0A] p-3 rounded-md border border-[#2A2A2A] text-sm text-yellow-500/90 font-medium">
+                    {profile.strategy}
+                  </p>
+                </div>
+                <div>
+                  <span className="text-sm text-gray-400 block mb-1">
+                    Formato e Estilo de Edição
+                  </span>
+                  <p className="text-sm">{profile.style}</p>
+                </div>
+                <div>
+                  <span className="text-sm text-gray-400 block mb-2 flex items-center gap-1">
+                    <Video className="w-4 h-4" /> Primeiros Vídeos
+                  </span>
+                  <ul className="space-y-2">
+                    {profile.ideas.map((idea: string, i: number) => (
+                      <li
+                        key={i}
+                        className="text-sm bg-[#0A0A0A] p-2 rounded border border-[#2A2A2A]"
+                      >
+                        {idea}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </motion.div>
       )}
     </div>

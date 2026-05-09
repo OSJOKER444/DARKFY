@@ -304,7 +304,6 @@ export default function Planner() {
           onNodeClick={onNodeClick}
           onPaneClick={onPaneClick}
           fitView
-          theme="dark"
         >
           <Panel position="top-left" className="bg-[#141414] p-2 rounded-lg border border-[#2A2A2A] flex gap-2">
             <Button variant="outline" size="sm" onClick={addNewNode} className="gap-2">

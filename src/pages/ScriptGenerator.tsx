@@ -102,7 +102,7 @@ export default function ScriptGenerator() {
     <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-display font-bold tracking-tight">
-          Gerador de Roteiros Virais
+          Gerador de Narração Viral
         </h1>
         <p className="text-gray-400 mt-1">
           Crie roteiros otimizados para retenção máxima no TikTok.

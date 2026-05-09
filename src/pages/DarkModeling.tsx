@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/src/components/ui/card";
-import { Scan, Link as LinkIcon, Video, User, Copy, Check, Smartphone, Camera, FileText, Hash, LayoutTemplate } from "lucide-react";
+import { Scan, Link as LinkIcon, Video, User, Copy, Check, Smartphone, Camera, FileText, Hash, LayoutTemplate, Anchor, Clapperboard } from "lucide-react";
 import { motion } from "motion/react";
 import { getGeminiClient } from "@/src/lib/gemini";
 import { cn } from "@/src/lib/utils";
@@ -19,7 +19,7 @@ export default function DarkModeling() {
   const [url, setUrl] = useState("");
   const [context, setContext] = useState("");
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<{script: string, caption: string, profileStrategy: string} | null>(null);
+  const [result, setResult] = useState<{hook: string, videoStructure: string, script: string, caption: string, profileStrategy: string} | null>(null);
   const [copiedSection, setCopiedSection] = useState<string | null>(null);
 
   const generateModeling = async () => {
@@ -40,7 +40,9 @@ Sua tarefa é acessar o link fornecido e analisar profundamente o conteúdo. Se 
 
 Retorne APENAS um JSON válido com a seguinte estrutura exata:
 {
-  "script": "O roteiro modelado detalhado (Hook chamativo, Desenvolvimento com retenção, CTA forte) adaptado para um canal dark.",
+  "hook": "Sugestão detalhada de gancho (hook) incrivelmente chamativo para os primeiros 3 segundos do vídeo.",
+  "videoStructure": "Estrutura visual e direção de arte recomendada para o vídeo (ideias de imagens/vídeos de fundo, estilo de edição, transições, etc).",
+  "script": "O roteiro completo passo a passo do vídeo, focando em desenvolvimento com retenção e chamadas atrativas.",
   "caption": "Uma legenda viral modelada, incluindo chamada para ação e hashtags estratégicas.",
   "profileStrategy": "Como o perfil deve ser estruturado (ideia de foto de perfil, bio otimizada, destaques) para atrair o mesmo público desse conteúdo."
 }`;
@@ -50,8 +52,6 @@ Retorne APENAS um JSON válido com a seguinte estrutura exata:
         contents: prompt,
         config: {
           responseMimeType: "application/json",
-          tools: [{ googleSearch: {} }, { urlContext: {} }],
-          toolConfig: { includeServerSideToolInvocations: true }
         }
       });
 
@@ -79,7 +79,7 @@ Retorne APENAS um JSON válido com a seguinte estrutura exata:
       <div>
         <h1 className="text-3xl font-display font-bold tracking-tight flex items-center gap-3">
           <Scan className="w-8 h-8 text-[#7B2EFF]" />
-          Modelagem Dark
+          Modelador de Conteúdo
         </h1>
         <p className="text-gray-400 mt-1">
           Cole o link de um vídeo ou perfil viral e a IA fará a engenharia reversa, entregando tudo modelado para o seu canal.
@@ -191,7 +191,7 @@ Retorne APENAS um JSON válido com a seguinte estrutura exata:
             disabled={loading || !url.trim()}
           >
             <Scan className="w-5 h-5" />
-            {loading ? "ANALISANDO E MODELANDO..." : "INICIAR MODELAGEM DARK"}
+            {loading ? "ANALISANDO E MODELANDO..." : "INICIAR MODELADOR DE CONTEÚDO"}
           </Button>
         </CardContent>
       </Card>
@@ -201,9 +201,67 @@ Retorne APENAS um JSON válido com a seguinte estrutura exata:
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-6"
+          className="space-y-6"
         >
-          {/* Roteiro */}
+          {/* Gancho & Estrutura */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card className="bg-[#141414] border-[#2A2A2A] flex flex-col">
+              <CardHeader className="pb-2 flex flex-row items-center justify-between">
+                <CardTitle className="text-lg flex items-center gap-2 text-orange-500">
+                  <Anchor className="w-5 h-5" />
+                  Gancho (Hook)
+                </CardTitle>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => copyToClipboard(result.hook, "hook")}
+                >
+                  {copiedSection === "hook" ? (
+                    <Check className="w-4 h-4 text-green-500" />
+                  ) : (
+                    <Copy className="w-4 h-4 text-gray-400" />
+                  )}
+                </Button>
+              </CardHeader>
+              <CardContent className="flex-1">
+                <div className="bg-[#0A0A0A] p-4 rounded-lg border border-[#2A2A2A] h-full">
+                  <p className="text-gray-300 text-sm leading-relaxed whitespace-pre-wrap">
+                    {result.hook}
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-[#141414] border-[#2A2A2A] flex flex-col">
+              <CardHeader className="pb-2 flex flex-row items-center justify-between">
+                <CardTitle className="text-lg flex items-center gap-2 text-pink-500">
+                  <Clapperboard className="w-5 h-5" />
+                  Estrutura Visual do Vídeo
+                </CardTitle>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => copyToClipboard(result.videoStructure, "videoStructure")}
+                >
+                  {copiedSection === "videoStructure" ? (
+                    <Check className="w-4 h-4 text-green-500" />
+                  ) : (
+                    <Copy className="w-4 h-4 text-gray-400" />
+                  )}
+                </Button>
+              </CardHeader>
+              <CardContent className="flex-1">
+                <div className="bg-[#0A0A0A] p-4 rounded-lg border border-[#2A2A2A] h-full">
+                  <p className="text-gray-300 text-sm leading-relaxed whitespace-pre-wrap">
+                    {result.videoStructure}
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Roteiro */}
           <Card className="bg-[#141414] border-[#2A2A2A] flex flex-col">
             <CardHeader className="pb-2 flex flex-row items-center justify-between">
               <CardTitle className="text-lg flex items-center gap-2 text-yellow-500">
@@ -286,6 +344,7 @@ Retorne APENAS um JSON válido com a seguinte estrutura exata:
               </div>
             </CardContent>
           </Card>
+          </div>
         </motion.div>
       )}
     </div>
