@@ -58,7 +58,7 @@ export default function HowItWorks() {
             <CardHeader className="pb-4 border-b border-[#2A2A2A] bg-[#0A0A0A]">
               <CardTitle className="text-xl flex items-center gap-2 text-[#7B2EFF]">
                 <BookOpen className="w-6 h-6" />
-                Aula 2: Estratégias e Prática
+                Aula 2: Os Melhores Nichos no Dark para Infoprodutos
               </CardTitle>
             </CardHeader>
             <CardContent className="p-0">
