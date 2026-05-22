@@ -28,7 +28,7 @@ import { cn } from "@/src/lib/utils";
 
 const menuItems = [
   { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
-  { icon: Bot, label: "Darkfy AI", path: "/ai-consultant" },
+  { icon: Bot, label: "Dark Bot", path: "/ai-consultant" },
   { icon: Workflow, label: "Planejador Estratégico", path: "/planner" },
   { icon: TrendingUp, label: "Nichos Virais", path: "/niches" },
   { icon: UserCircle, label: "Criador de Perfil Dark", path: "/profile" },

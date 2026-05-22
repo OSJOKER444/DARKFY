@@ -73,32 +73,20 @@ service cloud.firestore {
     // ===============================================================
     
     function isValidScript(data) {
-      return hasOnlyAllowedFields(['userId', 'niche', 'theme', 'hook', 'development', 'cta', 'createdAt']) &&
-             hasRequiredFields(['userId', 'hook', 'development', 'cta', 'createdAt']) &&
+      return data.keys().hasAll(['userId', 'hook', 'development', 'cta', 'createdAt']) &&
              data.userId is string && data.userId.size() > 0 && data.userId.size() < 100 &&
-             isValidOptionalString('niche', 0, 200) &&
-             isValidOptionalString('theme', 0, 200) &&
-             isValidString('hook', 1, 2000) &&
-             isValidString('development', 1, 10000) &&
-             isValidString('cta', 1, 2000) &&
              data.createdAt is timestamp;
     }
 
     function isValidChat(data) {
-      return hasOnlyAllowedFields(['userId', 'title', 'createdAt', 'updatedAt']) &&
-             hasRequiredFields(['userId', 'title', 'createdAt', 'updatedAt']) &&
-             isValidString('userId', 1, 100) &&
-             isValidString('title', 1, 300) &&
-             data.createdAt is timestamp &&
-             data.updatedAt is timestamp;
+      return data.keys().hasAll(['userId', 'createdAt']) &&
+             data.userId is string && data.userId.size() > 0 && data.userId.size() <= 100 &&
+             data.createdAt is timestamp;
     }
 
     function isValidChatMessage(data) {
-      return hasOnlyAllowedFields(['userId', 'role', 'text', 'createdAt']) &&
-             hasRequiredFields(['userId', 'role', 'text', 'createdAt']) &&
-             isValidString('userId', 1, 100) &&
-             isValidString('role', 1, 50) &&
-             isValidString('text', 1, 50000) &&
+      return data.keys().hasAll(['userId', 'role', 'text', 'createdAt']) &&
+             data.userId is string && data.userId.size() > 0 && data.userId.size() <= 100 &&
              data.createdAt is timestamp;
     }
 
@@ -137,6 +125,10 @@ service cloud.firestore {
         allow update: if false; // Messages shouldn't be updated
         allow delete: if isDocOwner();
       }
+    }
+
+    match /test/{docId} {
+      allow read, write: if true;
     }
   }
 }

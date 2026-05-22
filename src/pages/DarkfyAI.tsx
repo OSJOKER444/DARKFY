@@ -1,12 +1,11 @@
 import { useState, useRef, useEffect } from "react";
-import { Send, Bot, User as UserIcon, MessageSquarePlus, MessageSquare, Trash2, Menu, X } from "lucide-react";
+import { Send, Bot, User as UserIcon, MessageSquarePlus, MessageSquare, Trash2, Menu, X, ChevronDown, Type, FileText, ArrowUp } from "lucide-react";
 import { getGeminiClient } from "../lib/gemini";
 import ReactMarkdown from "react-markdown";
 import { auth, db } from "../firebase";
 import { onAuthStateChanged, User as FirebaseUser } from "firebase/auth";
 import { collection, doc, query, where, orderBy, onSnapshot, serverTimestamp, setDoc, deleteDoc } from "firebase/firestore";
 import { cn } from "../lib/utils";
-import { BackgroundGradientAnimation } from "../components/ui/background-gradient-animation";
 
 export default function DarkfyAI() {
   const [messages, setMessages] = useState<{ role: "user" | "model", text: string }[]>([]);
@@ -30,7 +29,7 @@ export default function DarkfyAI() {
 
   const userName = user?.displayName?.split(" ")[0] || "Usuário";
 
-  const systemInstruction = `Você é o Darkfy AI, assistente de marketing digital especializado em infoprodutores e criadores de conteúdo, integrado à plataforma Darkfy.
+  const systemInstruction = `Você é o Dark Bot, assistente de marketing digital especializado em infoprodutores e criadores de conteúdo, integrado à plataforma Darkfy.
 Seu papel é ser um consultor completo: você não apenas responde — você explica o raciocínio por trás de cada estratégia, educa o usuário enquanto resolve o problema dele e o deixa mais capaz a cada conversa.
 
 PERSONALIDADE E TOM
@@ -106,7 +105,7 @@ Você está aqui para transformar o usuário em um infoprodutor mais capaz. Cada
   useEffect(() => {
     if (!currentChatId) {
       setMessages([
-        { role: "model", text: "Olá! Eu sou o Darkfy AI, seu consultor de marketing digital. Como posso ajudar com seu negócio digital hoje?" }
+        { role: "model", text: "Olá! Eu sou o Dark Bot, seu consultor de marketing digital. Como posso ajudar com seu negócio digital hoje?" }
       ]);
       try {
         const ai = getGeminiClient();
@@ -138,7 +137,7 @@ Você está aqui para transformar o usuário em um infoprodutor mais capaz. Cada
       });
       
       if (msgs.length === 0) {
-        setMessages([{ role: "model", text: "Olá! Eu sou o Darkfy AI, seu consultor de marketing digital. Como posso ajudar com seu negócio digital hoje?" }]);
+        setMessages([{ role: "model", text: "Olá! Eu sou o Dark Bot, seu consultor de marketing digital. Como posso ajudar com seu negócio digital hoje?" }]);
       } else {
         setMessages(msgs);
       }
@@ -266,6 +265,8 @@ Você está aqui para transformar o usuário em um infoprodutor mais capaz. Cada
     }
   };
 
+  const isNewChat = messages.length <= 1;
+
   return (
     <div className="flex h-[calc(100vh-6rem)] w-full gap-4 relative">
       {/* Mobile sidebar toggle */}
@@ -289,7 +290,7 @@ Você está aqui para transformar o usuário em um infoprodutor mais capaz. Cada
               setCurrentChatId(null);
               setSidebarOpen(false);
             }}
-            className="w-full flex items-center gap-3 px-4 py-3 bg-[#7B2EFF] hover:bg-[#6821E3] text-white rounded-xl transition-all shadow-[0_0_15px_rgba(123,46,255,0.3)] hover:shadow-[0_0_20px_rgba(123,46,255,0.5)] font-medium"
+            className="w-full flex items-center gap-3 px-4 py-3 bg-[#1A1A1A] hover:bg-[#2A2A2A] text-white rounded-xl transition-all border border-[#2A2A2A] font-medium"
           >
             <MessageSquarePlus className="w-5 h-5" />
             Nova conversa
@@ -332,45 +333,77 @@ Você está aqui para transformar o usuário em um infoprodutor mais capaz. Cada
       </div>
 
       {/* Main Chat Area */}
-      <BackgroundGradientAnimation
-        gradientBackgroundStart="rgb(10, 10, 10)"
-        gradientBackgroundEnd="rgb(20, 5, 40)"
-        firstColor="123, 46, 255"
-        secondColor="76, 29, 149"
-        thirdColor="168, 85, 247"
-        fourthColor="50, 10, 100"
-        fifthColor="20, 5, 50"
-        pointerColor="123, 46, 255"
-        className="absolute inset-0 z-10 flex flex-col items-center justify-center p-4 md:p-8 pt-16 md:pt-8"
-        containerClassName="flex-1 h-full w-full rounded-2xl relative overflow-hidden"
+      <div 
+        className="flex-1 h-full w-full rounded-2xl relative overflow-hidden bg-[#0A0A0A] border border-[#2A2A2A]"
       >
-        <div className="w-full max-w-4xl h-full flex flex-col space-y-4 relative z-20">
-          <div className="text-center md:text-left">
-            <h1 className="text-2xl md:text-4xl font-display font-bold tracking-tight text-white drop-shadow-lg">
-              Darkfy AI
-            </h1>
-            <p className="text-sm md:text-base text-gray-300 mt-1 font-medium drop-shadow">
-              Seu consultor especialista em marketing digital, lançamentos e infoprodutos.
-            </p>
-          </div>
+        {/* Glow Background centered */}
+        <div 
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[80%] w-[600px] h-[600px] bg-fuchsia-600/30 blur-[120px] rounded-full pointer-events-none"
+        />
 
-          <div className="flex-1 overflow-hidden relative rounded-2xl border border-white/10 bg-black/40 backdrop-blur-xl shadow-2xl flex flex-col">
+        {isNewChat ? (
+          // Hero / Empty State UI
+          <div className="w-full h-full flex flex-col items-center justify-center p-4 md:p-8 relative z-10 space-y-8">
+            <div className="text-center space-y-3">
+              <h1 className="text-3xl md:text-5xl font-display font-bold tracking-tight text-white drop-shadow-md flex items-center justify-center gap-4">
+                <Bot className="w-10 h-10 md:w-12 md:h-12 text-[#7B2EFF]" />
+                Dark Bot
+              </h1>
+              <p className="text-sm md:text-lg text-gray-300 font-medium">
+                Como posso te ajudar com o seu negócio digital hoje?
+              </p>
+            </div>
+
+            <div className="w-full max-w-3xl space-y-3 mt-4">
+              <div className="bg-[#1C1C1E]/90 border border-[#2C2C2E] rounded-3xl p-3 flex flex-col shadow-2xl backdrop-blur-xl">
+                <textarea
+                  className="w-full bg-transparent text-white placeholder-gray-500 resize-none focus:outline-none min-h-[60px] p-2 text-base md:text-lg overflow-y-hidden"
+                  placeholder="Pergunte ao Dark Bot..."
+                  value={input}
+                  onChange={(e) => {
+                    setInput(e.target.value);
+                    e.target.style.height = 'auto';
+                    e.target.style.height = e.target.scrollHeight + 'px';
+                  }}
+                  onKeyDown={handleKeyDown}
+                  autoFocus
+                />
+                
+                <div className="flex justify-end mt-2">
+                  <button
+                    className="p-2.5 bg-[#2C2C2E] hover:bg-[#3C3C3E] text-white rounded-xl transition-all disabled:opacity-50 border border-[#3C3C3E]"
+                    onClick={handleSend}
+                    disabled={!input.trim() || loading || !chatSession}
+                  >
+                    <ArrowUp className="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
+              
+              <div className="flex justify-center text-xs text-gray-500 px-4 mt-2">
+                 <p>O Dark Bot pode cometer erros. Revise as informações.</p>
+              </div>
+            </div>
+          </div>
+        ) : (
+          // Active Chat UI
+          <div className="w-full h-full flex flex-col relative z-20">
             {/* Messages */}
             <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-6 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-white/10 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-white/20">
               {messages.map((msg, i) => (
                 <div key={i} className={cn("flex gap-4 max-w-[90%] md:max-w-[85%]", msg.role === "user" ? "ml-auto" : "")}>
                   {msg.role === "model" && (
-                    <div className="w-8 h-8 shrink-0 rounded-full bg-[#7B2EFF]/30 border border-[#7B2EFF]/50 flex items-center justify-center shadow-[0_0_15px_rgba(123,46,255,0.4)]">
-                      <Bot className="w-5 h-5 text-white" />
+                    <div className="w-8 h-8 shrink-0 rounded-full bg-[#2A2A2A] border border-[#3A3A3A] flex items-center justify-center mt-1">
+                      <Bot className="w-5 h-5 text-gray-300" />
                     </div>
                   )}
                   
                   <div 
                     className={cn(
-                      "px-4 py-3 md:px-5 md:py-4 rounded-2xl text-sm md:text-[15px] leading-relaxed shadow-lg backdrop-blur-md",
+                      "px-4 py-3 md:px-5 md:py-4 rounded-2xl text-sm md:text-[15px] leading-relaxed shadow-sm",
                       msg.role === "user" 
-                        ? "bg-gradient-to-br from-[#7B2EFF] to-[#4C1D95] text-white rounded-tr-sm border border-[#7B2EFF]/30" 
-                        : "bg-black/40 text-gray-100 border border-white/10 rounded-tl-sm markdown-body font-normal"
+                        ? "bg-[#2A2A2A] text-white border border-[#3A3A3A] rounded-tr-sm" 
+                        : "bg-transparent text-gray-200 markdown-body font-normal"
                     )}
                   >
                     {msg.role === "model" ? (
@@ -381,8 +414,8 @@ Você está aqui para transformar o usuário em um infoprodutor mais capaz. Cada
                   </div>
 
                   {msg.role === "user" && (
-                    <div className="w-8 h-8 shrink-0 rounded-full bg-white/10 border border-white/20 flex items-center justify-center shadow-md">
-                      <UserIcon className="w-5 h-5 text-white/80" />
+                    <div className="w-8 h-8 shrink-0 rounded-full bg-[#1A1A1A] border border-[#2A2A2A] flex items-center justify-center mt-1">
+                      <UserIcon className="w-5 h-5 text-gray-400" />
                     </div>
                   )}
                 </div>
@@ -390,49 +423,52 @@ Você está aqui para transformar o usuário em um infoprodutor mais capaz. Cada
 
               {loading && (
                 <div className="flex gap-4 max-w-[85%]">
-                  <div className="w-8 h-8 shrink-0 rounded-full bg-[#7B2EFF]/30 border border-[#7B2EFF]/50 flex items-center justify-center shadow-[0_0_15px_rgba(123,46,255,0.4)]">
-                    <Bot className="w-5 h-5 text-white" />
+                  <div className="w-8 h-8 shrink-0 rounded-full bg-[#2A2A2A] border border-[#3A3A3A] flex items-center justify-center">
+                    <Bot className="w-5 h-5 text-gray-300" />
                   </div>
-                  <div className="px-5 py-4 rounded-2xl bg-black/40 border border-white/10 rounded-tl-sm flex items-center gap-2 shadow-lg backdrop-blur-md">
-                    <div className="w-2 h-2 bg-[#7B2EFF] rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-                    <div className="w-2 h-2 bg-[#7B2EFF] rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-                    <div className="w-2 h-2 bg-[#7B2EFF] rounded-full animate-bounce"></div>
+                  <div className="px-5 py-4 rounded-2xl bg-transparent flex items-center gap-2">
+                    <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+                    <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+                    <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"></div>
                   </div>
                 </div>
               )}
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Input */}
-            <div className="p-4 border-t border-white/10 bg-black/40 backdrop-blur-md">
-              <div className="relative flex items-end gap-3 group">
-                <textarea
-                  className="w-full bg-white/5 border border-white/10 rounded-2xl pl-4 pr-14 py-3 md:py-4 text-white placeholder-gray-400 focus:outline-none focus:border-[#7B2EFF]/50 focus:bg-white/10 hover:border-white/20 transition-all shadow-inner min-h-[50px] md:min-h-[60px] max-h-[150px] resize-none overflow-y-auto text-sm md:text-base"
-                  placeholder="Pergunte à IA..."
-                  rows={1}
-                  value={input}
-                  onChange={(e) => {
-                    setInput(e.target.value);
-                    e.target.style.height = 'auto';
-                    e.target.style.height = e.target.scrollHeight + 'px';
-                  }}
-                  onKeyDown={handleKeyDown}
-                />
-                <button
-                  className="absolute right-2 bottom-1.5 md:bottom-2 p-2.5 md:p-3 bg-gradient-to-r from-[#7B2EFF] to-[#A855F7] hover:from-[#6821E3] hover:to-[#9333EA] text-white rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(123,46,255,0.4)] hover:shadow-[0_0_25px_rgba(123,46,255,0.6)]"
-                  onClick={handleSend}
-                  disabled={!input.trim() || loading || !chatSession}
-                >
-                  <Send className="w-4 h-4 md:w-5 md:h-5" />
-                </button>
+            {/* In-chat Input */}
+            <div className="p-4 md:p-6 bg-gradient-to-t from-[#0A0A0A] via-[#0A0A0A] to-transparent">
+              <div className="max-w-3xl mx-auto">
+                <div className="relative bg-[#1C1C1E] border border-[#2C2C2E] rounded-3xl p-3 flex items-end shadow-xl">
+                  <textarea
+                    className="w-full bg-transparent text-white placeholder-gray-500 resize-none focus:outline-none min-h-[44px] max-h-[150px] p-2 overflow-y-auto"
+                    placeholder="Envie uma mensagem..."
+                    rows={1}
+                    value={input}
+                    onChange={(e) => {
+                      setInput(e.target.value);
+                      e.target.style.height = 'auto';
+                      e.target.style.height = e.target.scrollHeight + 'px';
+                    }}
+                    onKeyDown={handleKeyDown}
+                  />
+                  <button
+                    className="shrink-0 ml-2 p-2.5 bg-[#2C2C2E] hover:bg-[#3C3C3E] text-white rounded-xl transition-all disabled:opacity-50"
+                    onClick={handleSend}
+                    disabled={!input.trim() || loading || !chatSession}
+                  >
+                    <ArrowUp className="w-5 h-5" />
+                  </button>
+                </div>
+                <p className="text-[10px] md:text-xs text-gray-500 text-center mt-2">
+                  O Dark Bot pode cometer erros. Revise as informações.
+                </p>
               </div>
-              <p className="text-[10px] md:text-xs text-gray-400/80 text-center mt-2 font-medium">
-                Darkfy AI pode cometer erros.
-              </p>
             </div>
           </div>
-        </div>
-      </BackgroundGradientAnimation>
+        )}
+      </div>
     </div>
   );
 }
+
