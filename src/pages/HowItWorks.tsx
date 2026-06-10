@@ -118,6 +118,41 @@ export default function HowItWorks() {
             </CardContent>
           </Card>
         </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+        >
+          <Card className="bg-[#141414] border-[#2A2A2A] overflow-hidden">
+            <CardHeader className="pb-4 border-b border-[#2A2A2A] bg-[#0A0A0A]">
+              <CardTitle className="text-xl flex items-center gap-2 text-[#7B2EFF]">
+                <BookOpen className="w-6 h-6" />
+                Aula 4: Criando um Produto + Página de Vendas com IA
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-0">
+              <div className="aspect-video w-full">
+                <iframe
+                  width="100%"
+                  height="100%"
+                  src="https://www.youtube.com/embed/X_p39R0lBfM"
+                  title="Aula 4 Darkfy"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                  className="w-full h-full"
+                ></iframe>
+              </div>
+              <div className="p-6 bg-[#141414]">
+                <h3 className="text-lg font-medium text-white mb-2">Sobre esta aula</h3>
+                <p className="text-gray-400 text-sm leading-relaxed">
+                  Acompanhe mais dicas e estratégias na nossa quarta aula.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
       </div>
     </div>
   );
