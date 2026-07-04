@@ -13,15 +13,21 @@ import {
   AlignLeft,
   Crosshair,
   Video,
+  Save,
+  Check,
 } from "lucide-react";
 import { motion } from "motion/react";
 import { updateMetric } from "@/src/lib/metrics";
 import { getGeminiClient } from "@/src/lib/gemini";
+import { db, auth } from "../firebase";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 export default function ProfileCreator() {
   const [niche, setNiche] = useState("");
   const [loading, setLoading] = useState(false);
   const [profile, setProfile] = useState<any>(null);
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
 
   const generateProfile = async () => {
     if (!niche) return;
@@ -55,12 +61,44 @@ export default function ProfileCreator() {
       const cleanedText = text.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
       const data = JSON.parse(cleanedText);
       setProfile(data);
+      setSaved(false);
       updateMetric("darkfy_metric_profiles", 1);
     } catch (error: any) {
       console.error(error);
       alert(`Erro ao gerar perfil: ${error.message || "Verifique o console para mais detalhes."}`);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const saveProfile = async () => {
+    if (!profile) return;
+    if (!auth.currentUser) {
+      alert("Você precisa estar logado para salvar.");
+      return;
+    }
+
+    setSaving(true);
+    try {
+      await addDoc(collection(db, "profiles"), {
+        userId: auth.currentUser.uid,
+        niche: niche,
+        name: profile.name,
+        profilePicture: profile.profilePicture,
+        visualIdentity: profile.visualIdentity,
+        bio: profile.bio,
+        positioning: profile.positioning,
+        strategy: profile.strategy,
+        style: profile.style,
+        ideas: profile.ideas || [],
+        createdAt: serverTimestamp()
+      });
+      setSaved(true);
+    } catch (error) {
+      console.error("Erro ao salvar perfil:", error);
+      alert("Erro ao salvar perfil.");
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -160,10 +198,12 @@ export default function ProfileCreator() {
           <div className="space-y-6">
             <Card className="bg-[#141414] border-[#2A2A2A]">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-orange-500">
-                  <Crosshair className="w-5 h-5" />
-                  Estratégia e Conteúdo
-                </CardTitle>
+                <div className="flex items-center justify-between w-full">
+                  <CardTitle className="flex items-center gap-2 text-orange-500">
+                    <Crosshair className="w-5 h-5" />
+                    Estratégia e Conteúdo
+                  </CardTitle>
+                </div>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div>
@@ -198,6 +238,34 @@ export default function ProfileCreator() {
               </CardContent>
             </Card>
           </div>
+        </motion.div>
+      )}
+
+      {profile && (
+        <motion.div
+           initial={{ opacity: 0 }}
+           animate={{ opacity: 1 }}
+           transition={{ delay: 0.3 }}
+           className="flex justify-end mt-4"
+        >
+          <Button
+            variant="outline"
+            className="gap-2 border-[#2A2A2A] hover:bg-[#2A2A2A]"
+            onClick={saveProfile}
+            disabled={saving || saved}
+          >
+            {saved ? (
+              <>
+                <Check className="w-4 h-4 text-green-500" /> Salvo nos seus perfis
+              </>
+            ) : saving ? (
+              "Salvando..."
+            ) : (
+              <>
+                <Save className="w-4 h-4" /> Salvar Perfil
+              </>
+            )}
+          </Button>
         </motion.div>
       )}
     </div>

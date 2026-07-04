@@ -90,9 +90,27 @@ service cloud.firestore {
              data.createdAt is timestamp;
     }
 
+    function isValidProfile(data) {
+      return data.keys().hasAll(['userId', 'createdAt']) &&
+             data.userId is string && data.userId.size() > 0 && data.userId.size() < 100 &&
+             data.createdAt is timestamp;
+    }
+
     // ===============================================================
     // Rules
     // ===============================================================
+
+    match /profiles/{profileId} {
+      allow read: if isDocOwner();
+      allow create: if isAuthenticated() && 
+                    isValidProfile(request.resource.data) && 
+                    uidUnchanged();
+      allow update: if isDocOwner() && 
+                    isValidProfile(request.resource.data) && 
+                    uidNotModified() &&
+                    areImmutableFieldsUnchanged(['createdAt']);
+      allow delete: if isDocOwner();
+    }
 
     match /scripts/{scriptId} {
       allow read: if isDocOwner();

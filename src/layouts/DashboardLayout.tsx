@@ -32,6 +32,7 @@ const menuItems = [
   { icon: Workflow, label: "Planejador Estratégico", path: "/planner" },
   { icon: TrendingUp, label: "Nichos Virais", path: "/niches" },
   { icon: UserCircle, label: "Criador de Perfil Dark", path: "/profile" },
+  { icon: UserCircle, label: "Perfis Salvos", path: "/my-profiles" },
   { icon: FileText, label: "Gerador de Narração Viral", path: "/scripts" },
   { icon: FileText, label: "Meus Roteiros", path: "/my-scripts" },
   { icon: Wand2, label: "Prompter Profissional", path: "/prompter" },

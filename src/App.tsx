@@ -8,6 +8,7 @@ import Dashboard from "./pages/Dashboard";
 import Planner from "./pages/Planner";
 import Niches from "./pages/Niches";
 import ProfileCreator from "./pages/ProfileCreator";
+import MyProfiles from "./pages/MyProfiles";
 import ScriptGenerator from "./pages/ScriptGenerator";
 import MyScripts from "./pages/MyScripts";
 import ProfessionalPrompter from "./pages/ProfessionalPrompter";
@@ -58,6 +59,7 @@ export default function App() {
           <Route path="planner" element={<Planner />} />
           <Route path="niches" element={<Niches />} />
           <Route path="profile" element={<ProfileCreator />} />
+          <Route path="my-profiles" element={<MyProfiles />} />
           <Route path="scripts" element={<ScriptGenerator />} />
           <Route path="my-scripts" element={<MyScripts />} />
           <Route path="prompter" element={<ProfessionalPrompter />} />

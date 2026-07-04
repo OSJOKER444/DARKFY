@@ -1,14 +1,56 @@
-import { GoogleGenAI } from "@google/genai";
-
 export const getGeminiClient = () => {
-  // Tenta pegar a chave injetada pelo Vite ou pelo import.meta.env
-  const apiKey = process.env.GEMINI_API_KEY || import.meta.env.VITE_GEMINI_API_KEY;
+  return {
+    models: {
+      generateContent: async ({ model, contents, config }: any) => {
+        const response = await fetch('/api/gemini', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ model, contents, config }),
+        });
 
-  if (!apiKey || apiKey === "undefined") {
-    throw new Error(
-      "Chave de API do Gemini não encontrada. Para funcionar na Netlify, você precisa ir em 'Site configuration' > 'Environment variables', adicionar a variável GEMINI_API_KEY com a sua chave do Google AI Studio e fazer um novo deploy."
-    );
-  }
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.error || `Failed to call Gemini API: ${response.statusText}`);
+        }
 
-  return new GoogleGenAI({ apiKey });
+        const data = await response.json();
+        return { text: data.text };
+      }
+    },
+    chats: {
+      create: ({ model, config, history }: any) => {
+        let currentHistory = history || [];
+        const systemInstruction = config?.systemInstruction;
+
+        return {
+          sendMessage: async ({ message }: any) => {
+            const response = await fetch('/api/gemini-chat', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                model,
+                message,
+                history: currentHistory,
+                systemInstruction
+              }),
+            });
+
+            if (!response.ok) {
+              const errorData = await response.json().catch(() => ({}));
+              throw new Error(errorData.error || `Failed to call Gemini API: ${response.statusText}`);
+            }
+
+            const data = await response.json();
+            
+            // Note: we don't strictly need to manage history purely on client 
+            // if we just refetch it, but keeping it in sync helps.
+            currentHistory.push({ role: "user", parts: [{ text: message }] });
+            currentHistory.push({ role: "model", parts: [{ text: data.text }] });
+
+            return { text: data.text };
+          }
+        };
+      }
+    }
+  } as any;
 };

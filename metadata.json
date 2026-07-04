@@ -1,5 +1,6 @@
 {
   "name": "DARKFY",
   "description": "SaaS platform for creating and monetizing faceless TikTok profiles using AI.",
-  "requestFramePermissions": []
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
