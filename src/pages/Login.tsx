@@ -10,7 +10,6 @@ import {
   CardTitle,
 } from "@/src/components/ui/card";
 import { motion } from "motion/react";
-import { Crown } from "lucide-react";
 import { signInWithGoogle, loginWithEmail, registerWithEmail } from "../firebase";
 
 export default function Login() {
@@ -93,8 +92,8 @@ export default function Login() {
         className="z-10 w-full max-w-md px-4"
       >
         <div className="flex flex-col items-center mb-8">
-          <div className="w-16 h-16 rounded-xl bg-[#141414] border border-[#2A2A2A] flex items-center justify-center mb-4 glow-neon">
-            <Crown className="w-8 h-8 text-[#7B2EFF]" />
+          <div className="w-16 h-16 rounded-xl bg-[#141414] border border-[#2A2A2A] flex items-center justify-center mb-4 glow-neon overflow-hidden">
+            <img src="/logo.jpg" alt="Darkfy" className="w-full h-full object-cover" />
           </div>
           <h1 className="text-3xl font-display font-bold tracking-wider text-white">
             DARKFY
