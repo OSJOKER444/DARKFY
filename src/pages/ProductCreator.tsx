@@ -110,7 +110,7 @@ A sua resposta DEVE seguir estritamente o formato abaixo, formatado em Markdown:
           <Book className="w-6 h-6 text-[#7B2EFF]" />
         </div>
         <div>
-          <h1 className="text-3xl font-display font-bold tracking-wider text-white">
+          <h1 className="text-3xl font-sans font-bold tracking-wider text-white">
             Criador de Produtos
           </h1>
           <p className="text-gray-400 mt-1">Crie e-books com IA e prompts para páginas de vendas</p>
