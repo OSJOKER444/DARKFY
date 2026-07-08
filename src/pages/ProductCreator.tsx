@@ -1,24 +1,30 @@
-import { useState } from "react";
-import { Bot, Loader2, Sparkles, Book, DollarSign, Target, Copy, Check } from "lucide-react";
+import { useState, useRef } from "react";
+import { Bot, Loader2, Sparkles, Book, DollarSign, Target, Copy, Check, Download } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import { Input } from "@/src/components/ui/input";
 import { Label } from "@/src/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/src/components/ui/card";
 import { getGeminiClient } from "../lib/gemini";
 import Markdown from "react-markdown";
+import html2pdf from "html2pdf.js";
 
 export default function ProductCreator() {
   const [niche, setNiche] = useState("");
   const [price, setPrice] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
-  const [result, setResult] = useState("");
+  const [ebookResult, setEbookResult] = useState("");
+  const [salesResult, setSalesResult] = useState("");
+  const [activeTab, setActiveTab] = useState<'ebook' | 'sales'>('ebook');
   const [copied, setCopied] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
+  const resultRef = useRef<HTMLDivElement>(null);
 
   const handleGenerate = async () => {
     if (!niche || !price) return;
     
     setIsGenerating(true);
-    setResult("");
+    setEbookResult("");
+    setSalesResult("");
 
     try {
       const ai = getGeminiClient();
@@ -38,6 +44,8 @@ A sua resposta DEVE seguir estritamente o formato abaixo, formatado em Markdown:
 ## 💰 Proposta de Valor
 [Explique por que este produto vale ${price} e qual a transformação principal]
 
+===DIVIDER===
+
 ## 🛒 Prompt para Página de Vendas
 [Escreva um prompt super detalhado que o usuário possa copiar e colar em outra IA ou ferramenta para gerar a copy da página de vendas. O prompt deve instruir a criação de uma headline matadora, VSL/vídeo de vendas (se aplicável), dores do público, benefícios, o que você vai levar, bônus e FAQ.]`;
 
@@ -49,19 +57,46 @@ A sua resposta DEVE seguir estritamente o formato abaixo, formatado em Markdown:
         }
       });
 
-      setResult(response.text);
+      const text = response.text;
+      const parts = text.split("===DIVIDER===");
+      setEbookResult(parts[0]?.trim() || text);
+      if (parts[1]) {
+        setSalesResult(parts[1].trim());
+      }
+      setActiveTab('ebook');
     } catch (error) {
       console.error("Error generating product:", error);
-      setResult("Houve um erro ao gerar o produto. Tente novamente mais tarde.");
+      setEbookResult("Houve um erro ao gerar o produto. Tente novamente mais tarde.");
     } finally {
       setIsGenerating(false);
     }
   };
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(result);
+    const currentText = activeTab === 'ebook' ? ebookResult : salesResult;
+    navigator.clipboard.writeText(currentText);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleDownloadPDF = () => {
+    if (!resultRef.current) return;
+    setIsDownloading(true);
+
+    const opt = {
+      margin: 10,
+      filename: `produto-${niche.replace(/\s+/g, '-').toLowerCase()}.pdf`,
+      image: { type: 'jpeg' as const, quality: 0.98 },
+      html2canvas: { scale: 2, useCORS: true },
+      jsPDF: { unit: 'mm' as const, format: 'a4' as const, orientation: 'portrait' as const }
+    };
+
+    html2pdf().set(opt).from(resultRef.current).save().then(() => {
+      setIsDownloading(false);
+    }).catch((err: any) => {
+      console.error("PDF generation error:", err);
+      setIsDownloading(false);
+    });
   };
 
   return (
@@ -139,28 +174,75 @@ A sua resposta DEVE seguir estritamente o formato abaixo, formatado em Markdown:
         </Card>
 
         <Card className="col-span-1 lg:col-span-2 border-[#2A2A2A] bg-[#0A0A0A] flex flex-col">
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-lg text-white">Resultado</CardTitle>
-            {result && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={copyToClipboard}
-                className="border-[#2A2A2A] hover:bg-[#141414] text-gray-300 h-8"
-              >
-                {copied ? (
-                  <Check className="w-4 h-4 text-green-500" />
-                ) : (
-                  <Copy className="w-4 h-4" />
-                )}
-                <span className="ml-2">{copied ? "Copiado!" : "Copiar"}</span>
-              </Button>
+          <CardHeader className="flex flex-col gap-4 border-b border-[#2A2A2A] pb-4">
+            <div className="flex flex-row items-center justify-between">
+              <CardTitle className="text-lg text-white">Resultado</CardTitle>
+              {ebookResult && (
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleDownloadPDF}
+                    disabled={isDownloading || activeTab !== 'ebook'}
+                    className="border-[#2A2A2A] hover:bg-[#141414] text-gray-300 h-8"
+                  >
+                    {isDownloading ? (
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    ) : (
+                      <Download className="w-4 h-4 mr-2" />
+                    )}
+                    Baixar PDF
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={copyToClipboard}
+                    className="border-[#2A2A2A] hover:bg-[#141414] text-gray-300 h-8"
+                  >
+                    {copied ? (
+                      <Check className="w-4 h-4 text-green-500" />
+                    ) : (
+                      <Copy className="w-4 h-4" />
+                    )}
+                    <span className="ml-2">{copied ? "Copiado!" : "Copiar"}</span>
+                  </Button>
+                </div>
+              )}
+            </div>
+            
+            {ebookResult && (
+              <div className="flex gap-2 bg-[#141414] p-1 rounded-lg">
+                <button
+                  onClick={() => setActiveTab('ebook')}
+                  className={`flex-1 py-1.5 text-sm font-medium rounded-md transition-colors ${
+                    activeTab === 'ebook'
+                      ? 'bg-[#2A2A2A] text-white shadow-sm'
+                      : 'text-gray-400 hover:text-white'
+                  }`}
+                >
+                  E-book
+                </button>
+                <button
+                  onClick={() => setActiveTab('sales')}
+                  className={`flex-1 py-1.5 text-sm font-medium rounded-md transition-colors ${
+                    activeTab === 'sales'
+                      ? 'bg-[#2A2A2A] text-white shadow-sm'
+                      : 'text-gray-400 hover:text-white'
+                  }`}
+                >
+                  Página de Vendas
+                </button>
+              </div>
             )}
           </CardHeader>
-          <CardContent className="flex-1 min-h-[400px] overflow-hidden">
-            {result ? (
-              <div className="prose prose-invert max-w-none markdown-body text-gray-300 w-full overflow-x-auto [&>pre]:whitespace-pre-wrap [&>pre]:break-words">
-                <Markdown>{result}</Markdown>
+          <CardContent className="flex-1 min-h-[400px] overflow-hidden pt-6">
+            {ebookResult ? (
+              <div ref={resultRef} className="prose prose-invert max-w-none markdown-body text-gray-300 w-full overflow-x-auto [&>pre]:whitespace-pre-wrap [&>pre]:break-words bg-[#0A0A0A] p-6 rounded-lg">
+                {activeTab === 'ebook' ? (
+                  <Markdown>{ebookResult}</Markdown>
+                ) : (
+                  <Markdown>{salesResult}</Markdown>
+                )}
               </div>
             ) : (
               <div className="h-full flex flex-col items-center justify-center text-gray-500 space-y-4 py-12">
