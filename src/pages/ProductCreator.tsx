@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { Bot, Loader2, Sparkles, Book, DollarSign, Target, Copy, Check, Download } from "lucide-react";
+import { Bot, Loader2, Sparkles, Book, DollarSign, Target, Copy, Check, Download, Users, AlertCircle } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import { Input } from "@/src/components/ui/input";
 import { Label } from "@/src/components/ui/label";
@@ -11,6 +11,8 @@ import html2pdf from "html2pdf.js";
 export default function ProductCreator() {
   const [niche, setNiche] = useState("");
   const [price, setPrice] = useState("");
+  const [targetAudience, setTargetAudience] = useState("");
+  const [pains, setPains] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [ebookResult, setEbookResult] = useState("");
   const [salesResult, setSalesResult] = useState("");
@@ -20,7 +22,7 @@ export default function ProductCreator() {
   const resultRef = useRef<HTMLDivElement>(null);
 
   const handleGenerate = async () => {
-    if (!niche || !price) return;
+    if (!niche || !price || !targetAudience || !pains) return;
     
     setIsGenerating(true);
     setEbookResult("");
@@ -32,6 +34,8 @@ export default function ProductCreator() {
 
 Preciso que você crie a estrutura de um produto digital (E-book) e um prompt para a criação de uma página de vendas profissional, com base nas seguintes informações:
 - Nicho e Sub-nicho: ${niche}
+- Público Alvo: ${targetAudience}
+- Dores / Problemas do Público: ${pains}
 - Preço do Produto: ${price}
 
 A sua resposta DEVE seguir estritamente o formato abaixo, formatado em Markdown:
@@ -140,6 +144,34 @@ A sua resposta DEVE seguir estritamente o formato abaixo, formatado em Markdown:
             </div>
 
             <div className="space-y-2">
+              <Label htmlFor="targetAudience" className="text-gray-300">Público Alvo</Label>
+              <div className="relative">
+                <Users className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                <Input
+                  id="targetAudience"
+                  placeholder="Ex: Mulheres de 25-40 anos"
+                  value={targetAudience}
+                  onChange={(e) => setTargetAudience(e.target.value)}
+                  className="pl-9 bg-[#141414] border-[#2A2A2A] text-white focus:border-[#7B2EFF] transition-colors"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="pains" className="text-gray-300">Dores / Problemas</Label>
+              <div className="relative">
+                <AlertCircle className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                <Input
+                  id="pains"
+                  placeholder="Ex: Falta de tempo, dificuldade em manter dieta"
+                  value={pains}
+                  onChange={(e) => setPains(e.target.value)}
+                  className="pl-9 bg-[#141414] border-[#2A2A2A] text-white focus:border-[#7B2EFF] transition-colors"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
               <Label htmlFor="price" className="text-gray-300">Preço do Produto</Label>
               <div className="relative">
                 <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
@@ -155,7 +187,7 @@ A sua resposta DEVE seguir estritamente o formato abaixo, formatado em Markdown:
 
             <Button
               onClick={handleGenerate}
-              disabled={isGenerating || !niche || !price}
+              disabled={isGenerating || !niche || !price || !targetAudience || !pains}
               className="w-full bg-[#7B2EFF] hover:bg-[#6A26E0] text-white font-medium"
             >
               {isGenerating ? (
