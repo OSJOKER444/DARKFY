@@ -68,9 +68,9 @@ A sua resposta DEVE seguir estritamente o formato abaixo, formatado em Markdown:
         setSalesResult(parts[1].trim());
       }
       setActiveTab('ebook');
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error generating product:", error);
-      setEbookResult("Houve um erro ao gerar o produto. Tente novamente mais tarde.");
+      setEbookResult(error.message || "Houve um erro ao gerar o produto. Tente novamente mais tarde.");
     } finally {
       setIsGenerating(false);
     }
