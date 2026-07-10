@@ -54,7 +54,7 @@ A sua resposta DEVE seguir estritamente o formato abaixo, formatado em Markdown:
 [Escreva um prompt super detalhado que o usuário possa copiar e colar em outra IA ou ferramenta para gerar a copy da página de vendas. O prompt deve instruir a criação de uma headline matadora, VSL/vídeo de vendas (se aplicável), dores do público, benefícios, o que você vai levar, bônus e FAQ.]`;
 
       const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
+        model: 'gemini-3.5-flash',
         contents: prompt,
         config: {
           temperature: 0.7,
@@ -68,9 +68,9 @@ A sua resposta DEVE seguir estritamente o formato abaixo, formatado em Markdown:
         setSalesResult(parts[1].trim());
       }
       setActiveTab('ebook');
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error generating product:", error);
-      setEbookResult("Houve um erro ao gerar o produto. Tente novamente mais tarde.");
+      setEbookResult(`Houve um erro ao gerar o produto: ${error.message || 'Erro desconhecido'}`);
     } finally {
       setIsGenerating(false);
     }

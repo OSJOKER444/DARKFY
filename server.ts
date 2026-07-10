@@ -44,7 +44,7 @@ async function startServer() {
       const { model, contents, config } = req.body;
       
       const response = await ai.models.generateContent({
-        model: model || "gemini-2.5-flash",
+        model: model || "gemini-3.5-flash",
         contents,
         config: config || {},
       });
@@ -68,7 +68,7 @@ async function startServer() {
       const { message, history, systemInstruction, model } = req.body;
       
       const chat = ai.chats.create({
-        model: model || "gemini-1.5-flash",
+        model: model || "gemini-3.5-flash",
         config: systemInstruction ? { systemInstruction } : undefined,
         history: history || []
       });
