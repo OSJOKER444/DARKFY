@@ -6,6 +6,7 @@ import DashboardLayout from "./layouts/DashboardLayout";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Planner from "./pages/Planner";
+import Niches from "./pages/Niches";
 import ProfileCreator from "./pages/ProfileCreator";
 import MyProfiles from "./pages/MyProfiles";
 import ScriptGenerator from "./pages/ScriptGenerator";
@@ -57,6 +58,7 @@ export default function App() {
           <Route index element={<Navigate to="/dashboard" replace />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="planner" element={<Planner />} />
+          <Route path="niches" element={<Niches />} />
           <Route path="profile" element={<ProfileCreator />} />
           <Route path="my-profiles" element={<MyProfiles />} />
           <Route path="scripts" element={<ScriptGenerator />} />

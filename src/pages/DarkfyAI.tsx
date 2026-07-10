@@ -110,7 +110,7 @@ Você está aqui para transformar o usuário em um infoprodutor mais capaz. Cada
       try {
         const ai = getGeminiClient();
         const chat = ai.chats.create({
-          model: "gemini-3.5-flash",
+          model: "gemini-2.5-flash",
           config: { systemInstruction }
         });
         setChatSession(chat);
@@ -149,7 +149,7 @@ Você está aqui para transformar o usuário em um infoprodutor mais capaz. Cada
           parts: [{ text: m.text }]
         }));
         const chat = ai.chats.create({
-          model: "gemini-3.5-flash",
+          model: "gemini-2.5-flash",
           config: { systemInstruction },
           history
         });
@@ -166,7 +166,7 @@ Você está aqui para transformar o usuário em um infoprodutor mais capaz. Cada
     try {
       const ai = getGeminiClient();
       const response = await ai.models.generateContent({
-          model: "gemini-3.5-flash",
+          model: "gemini-2.5-flash",
           contents: `Baseado nesta primeira mensagem do usuário, gere um título curto de até 4 palavras para a pesquisa/conversa (sem usar aspas, apenas o texto limpo): "${message}"`
       });
       return response.text?.trim().replace(/"/g, "") || "Nova Conversa";

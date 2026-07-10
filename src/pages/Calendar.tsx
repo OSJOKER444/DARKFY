@@ -12,7 +12,7 @@ import { ptBR } from "date-fns/locale";
 
 export default function Calendar() {
   const [posts, setPosts] = useState<Record<string, string[]>>({
-    "2026-03-06": ["Vídeo: 3 Segredos do TikTok"],
+    "2026-03-06": ["Vídeo: 3 Segredos do TikTok", "Vídeo: Nichos Virais"],
     "2026-03-07": ["Vídeo: Como monetizar rápido"],
   });
 

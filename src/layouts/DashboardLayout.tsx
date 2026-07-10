@@ -31,6 +31,7 @@ const menuItems = [
   { icon: Book, label: "Criador de Produtos", path: "/product-creator" },
   { icon: Bot, label: "Dark Bot", path: "/ai-consultant" },
   { icon: Workflow, label: "Planejador Estratégico", path: "/planner" },
+  { icon: TrendingUp, label: "Nichos Virais", path: "/niches" },
   { icon: UserCircle, label: "Criador de Perfil Dark", path: "/profile" },
   { icon: UserCircle, label: "Perfis Salvos", path: "/my-profiles" },
   { icon: FileText, label: "Gerador de Narração Viral", path: "/scripts" },
