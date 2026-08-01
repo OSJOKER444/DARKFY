@@ -9,8 +9,20 @@ export const getGeminiClient = () => {
         });
 
         if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          throw new Error(errorData.error || `Failed to call Gemini API: ${response.statusText}`);
+          let errorMessage = `Failed to call Gemini API (Status: ${response.status})`;
+          try {
+            const errorData = await response.json();
+            if (errorData.error) {
+              errorMessage = errorData.error;
+            }
+          } catch (e) {
+            if (response.status === 404 || response.status === 405) {
+               errorMessage = "O backend da aplicação não foi encontrado (Erro 404). Se você hospedou este aplicativo fora do AI Studio (ex: Vercel, Netlify, Firebase Hosting), lembre-se de que ele requer um servidor Node.js rodando o arquivo server.ts para funcionar as chamadas da inteligência artificial, e não apenas o frontend estático.";
+            } else {
+               errorMessage = `Erro do servidor (HTTP ${response.status}): O backend não retornou uma resposta válida.`;
+            }
+          }
+          throw new Error(errorMessage);
         }
 
         const data = await response.json();
@@ -36,8 +48,20 @@ export const getGeminiClient = () => {
             });
 
             if (!response.ok) {
-              const errorData = await response.json().catch(() => ({}));
-              throw new Error(errorData.error || `Failed to call Gemini API: ${response.statusText}`);
+              let errorMessage = `Failed to call Gemini API (Status: ${response.status})`;
+              try {
+                const errorData = await response.json();
+                if (errorData.error) {
+                  errorMessage = errorData.error;
+                }
+              } catch (e) {
+                if (response.status === 404 || response.status === 405) {
+                   errorMessage = "O backend da aplicação não foi encontrado (Erro 404). Se você hospedou este aplicativo fora do AI Studio (ex: Vercel, Netlify, Firebase Hosting), lembre-se de que ele requer um servidor Node.js rodando o arquivo server.ts para funcionar as chamadas da inteligência artificial, e não apenas o frontend estático.";
+                } else {
+                   errorMessage = `Erro do servidor (HTTP ${response.status}): O backend não retornou uma resposta válida.`;
+                }
+              }
+              throw new Error(errorMessage);
             }
 
             const data = await response.json();
