@@ -24,18 +24,19 @@ import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 export default function ProfileCreator() {
   const [niche, setNiche] = useState("");
+  const [subNiche, setSubNiche] = useState("");
   const [loading, setLoading] = useState(false);
   const [profile, setProfile] = useState<any>(null);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
   const generateProfile = async () => {
-    if (!niche) return;
+    if (!niche || !subNiche) return;
     setLoading(true);
 
     try {
       const ai = getGeminiClient();
-      const prompt = `Crie uma estrutura completa de perfil "dark" (sem aparecer) para o TikTok e Instagram no nicho de: ${niche}.
+      const prompt = `Crie uma estrutura completa de perfil "dark" (sem aparecer) para o TikTok e Instagram no nicho de: ${niche} e subnicho de: ${subNiche}.
       
       Retorne APENAS um JSON válido neste formato (todas as chaves são obrigatórias):
       {
@@ -83,6 +84,7 @@ export default function ProfileCreator() {
       await addDoc(collection(db, "profiles"), {
         userId: auth.currentUser.uid,
         niche: niche,
+        subNiche: subNiche,
         name: profile.name,
         profilePicture: profile.profilePicture,
         visualIdentity: profile.visualIdentity,
@@ -114,18 +116,24 @@ export default function ProfileCreator() {
       </div>
 
       <Card className="bg-[#141414] border-[#2A2A2A]">
-        <CardContent className="pt-6 flex gap-4">
+        <CardContent className="pt-6 flex flex-col md:flex-row gap-4">
           <Input
             placeholder="Digite o nicho (Ex: Produtividade)"
             value={niche}
             onChange={(e) => setNiche(e.target.value)}
             className="flex-1"
           />
+          <Input
+            placeholder="Digite o subnicho (Ex: Organização Pessoal)"
+            value={subNiche}
+            onChange={(e) => setSubNiche(e.target.value)}
+            className="flex-1"
+          />
           <Button
             variant="neon"
             onClick={generateProfile}
             disabled={loading}
-            className="gap-2"
+            className="gap-2 shrink-0"
           >
             <Sparkles className="w-4 h-4" />
             {loading ? "GERANDO..." : "CRIAR PERFIL"}

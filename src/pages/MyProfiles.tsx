@@ -54,7 +54,7 @@ export default function MyProfiles() {
       ideasText = "\n\nIDEIAS DE VÍDEO:\n" + profile.ideas.map((i: string) => `- ${i}`).join("\n");
     }
 
-    const text = `NOME: ${profile.name}\nNICHO: ${profile.niche}\n\nBIO:\n${profile.bio}\n\nFOTO DE PERFIL:\n${profile.profilePicture}\n\nIDENTIDADE VISUAL:\n${profile.visualIdentity}\n\nPOSICIONAMENTO:\n${profile.positioning}\n\nESTRATÉGIA:\n${profile.strategy}\n\nESTILO:\n${profile.style}${ideasText}`;
+    const text = `NOME: ${profile.name}\nNICHO: ${profile.niche}${profile.subNiche ? `\nSUBNICHO: ${profile.subNiche}` : ''}\n\nBIO:\n${profile.bio}\n\nFOTO DE PERFIL:\n${profile.profilePicture}\n\nIDENTIDADE VISUAL:\n${profile.visualIdentity}\n\nPOSICIONAMENTO:\n${profile.positioning}\n\nESTRATÉGIA:\n${profile.strategy}\n\nESTILO:\n${profile.style}${ideasText}`;
     
     navigator.clipboard.writeText(text);
     setCopiedIndex(index);
@@ -130,7 +130,7 @@ export default function MyProfiles() {
                       {profile.name || "Perfil sem nome"}
                     </div>
                     {profile.niche && (
-                      <span className="text-xs text-gray-400 font-normal">Nicho: {profile.niche}</span>
+                      <span className="text-xs text-gray-400 font-normal">Nicho: {profile.niche}{profile.subNiche ? ` | Subnicho: ${profile.subNiche}` : ''}</span>
                     )}
                   </CardTitle>
                 </CardHeader>
